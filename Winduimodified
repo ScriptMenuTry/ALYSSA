@@ -28774,8 +28774,9 @@ WindowShadow=Color3.fromHex"#1A0005",
 ScrollBar=Color3.fromHex"#5C0010",
 ScrollBarBackground=Color3.fromHex"#0D0005",
 
--- Minecraft pixel font applied automatically when Sovereign theme loads
-Font="rbxassetid://7085338559",
+-- Silkscreen: official Roblox pixel/bitmap font (ID 12187371840)
+-- Closest available match to the Minecraft blocky typeface style
+Font="rbxassetid://12187371840",
 
 Metadata={
 Description="⚔ Sovereign — enchanted volcanic throne. Blood, void, and forbidden fire.",
