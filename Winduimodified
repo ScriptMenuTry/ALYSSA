@@ -28271,7 +28271,7 @@ Name="Dark",
 
 Accent=Color3.fromHex"#18181b",
 Dialog=Color3.fromHex"#1a1a1a",
-Outline=Color3.fromHex"#FF2222",
+Outline=Color3.fromHex"#FFFFFF",
 Text=Color3.fromHex"#FFFFFF",
 Placeholder=Color3.fromHex"#a1a1a1",
 Background=Color3.fromHex"#101010",
@@ -28366,7 +28366,6 @@ Name="Red",
 
 Accent=Color3.fromHex"#991b1b",
 Dialog=Color3.fromHex"#450a0a",
-Outline=Color3.fromHex"#FF2222",
 
 Text=Color3.fromHex"#fef2f2",
 Placeholder=Color3.fromHex"#d95353",
@@ -28642,6 +28641,88 @@ Button=aa:Gradient({
 },{Rotation=60}),
 
 Icon=Color3.fromHex"#ffffff",
+},
+
+Sovereign={
+Name="Sovereign",
+
+Accent=aa:Gradient({
+["0"]={Color=Color3.fromHex"#6B0000",Transparency=0},
+["50"]={Color=Color3.fromHex"#9B0505",Transparency=0},
+["100"]={Color=Color3.fromHex"#C8001A",Transparency=0},
+},{Rotation=135}),
+
+Dialog=aa:Gradient({
+["0"]={Color=Color3.fromHex"#0D0005",Transparency=0},
+["50"]={Color=Color3.fromHex"#1A000A",Transparency=0},
+["100"]={Color=Color3.fromHex"#260010",Transparency=0},
+},{Rotation=90}),
+
+Outline=aa:Gradient({
+["0"]={Color=Color3.fromHex"#FF003C",Transparency=0},
+["50"]={Color=Color3.fromHex"#CC0022",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF1A4D",Transparency=0},
+},{Rotation=45}),
+
+Text=aa:Gradient({
+["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FFD6D6",Transparency=0},
+},{Rotation=45}),
+
+Placeholder=Color3.fromHex"#994455",
+
+Background=aa:Gradient({
+["0"]={Color=Color3.fromHex"#060008",Transparency=0},
+["40"]={Color=Color3.fromHex"#0E0005",Transparency=0},
+["70"]={Color=Color3.fromHex"#150008",Transparency=0},
+["100"]={Color=Color3.fromHex"#1A000D",Transparency=0},
+},{Rotation=160}),
+
+Button=aa:Gradient({
+["0"]={Color=Color3.fromHex"#8B0000",Transparency=0},
+["50"]={Color=Color3.fromHex"#B30015",Transparency=0},
+["100"]={Color=Color3.fromHex"#CC001A",Transparency=0},
+},{Rotation=45}),
+
+Icon=aa:Gradient({
+["0"]={Color=Color3.fromHex"#FF2244",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF6688",Transparency=0},
+},{Rotation=45}),
+
+Toggle=aa:Gradient({
+["0"]={Color=Color3.fromHex"#CC0022",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF1A4D",Transparency=0},
+},{Rotation=45}),
+
+Slider=aa:Gradient({
+["0"]={Color=Color3.fromHex"#9B0000",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF003C",Transparency=0},
+},{Rotation=45}),
+
+Checkbox=aa:Gradient({
+["0"]={Color=Color3.fromHex"#CC0022",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF1A4D",Transparency=0},
+},{Rotation=45}),
+
+PanelBackground=Color3.fromHex"#1A000D",
+PanelBackgroundTransparency=0.75,
+
+LabelBackground=Color3.fromHex"#0D0005",
+LabelBackgroundTransparency=0.6,
+
+SliderIcon=Color3.fromHex"#FF4466",
+Primary=Color3.fromHex"#CC0022",
+
+ElementBackground=aa:Gradient({
+["0"]={Color=Color3.fromHex"#1F0010",Transparency=0},
+["100"]={Color=Color3.fromHex"#2E0018",Transparency=0},
+},{Rotation=90}),
+ElementBackgroundTransparency=0,
+
+Metadata={
+Description="Sovereign — a blood-dark throne of crimson and void.",
+BackgroundGif="https://media0.giphy.com/media/96GnoTw2B0v00jYdat/giphy.gif",
+},
 },
 }
 end end function a.C()
@@ -39585,7 +39666,7 @@ Scale=aa.UIScale,
 aa.UIScaleObj=ax
 
 aa.ScreenGui=at("ScreenGui",{
-Name="SovereignUI",
+Name="Sovereign",
 Parent=aw,
 IgnoreGuiInset=true,
 ScreenInsets="None",
@@ -39613,17 +39694,17 @@ Name="ToolTips",
 })
 
 aa.NotificationGui=at("ScreenGui",{
-Name="SovereignUI/Notifications",
+Name="Sovereign/Notifications",
 Parent=aw,
 IgnoreGuiInset=true,
 })
 aa.DropdownGui=at("ScreenGui",{
-Name="SovereignUI/Dropdowns",
+Name="Sovereign/Dropdowns",
 Parent=aw,
 IgnoreGuiInset=true,
 })
 aa.TooltipGui=at("ScreenGui",{
-Name="SovereignUI/Tooltips",
+Name="Sovereign/Tooltips",
 Parent=aw,
 IgnoreGuiInset=true,
 })
@@ -39781,7 +39862,7 @@ aa.Themes=a.load'B'(aa,as)
 
 as.Themes=aa.Themes
 
-aa:SetTheme"Red"
+aa:SetTheme"Sovereign"
 aa:SetLanguage(as.Language)
 
 function aa.CreateWindow(az,aA)
@@ -39811,6 +39892,10 @@ local b=true
 
 local d=aa.Themes[aA.Theme or"Dark"]
 
+if (aA.Theme=="Sovereign" or aa.Theme and aa.Theme.Name=="Sovereign") and not aA.Background then
+aA.Background="https://media0.giphy.com/media/96GnoTw2B0v00jYdat/giphy.gif"
+aA.BackgroundImageTransparency=aA.BackgroundImageTransparency or 0.15
+end
 
 as.SetTheme(d)
 
