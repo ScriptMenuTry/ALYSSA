@@ -37426,7 +37426,7 @@ Resizable=av.Resizable~=false,
 Background=av.Background,
 BackgroundImageTransparency=av.BackgroundImageTransparency or 0,
 ShadowTransparency=av.ShadowTransparency or 0.6,
-User=av.User or{},
+User=av.User and(function(u) if u.Enabled==nil then u.Enabled=true end return u end)(av.User) or{},
 Footer=av.Footer or{},
 Topbar=av.Topbar or{Height=52,ButtonsType="Default"},
 
@@ -37735,15 +37735,15 @@ end
 
 f=ao("TextButton",{
 Size=UDim2.new(
-0,
-aw.UIElements.SideBarContainer.AbsoluteSize.X-(aw.UIPadding/2),
+1,
+-aw.UIPadding,
 0,
 42+aw.UIPadding
 ),
 Position=UDim2.new(0,aw.UIPadding/2,1,-(aw.UIPadding/2)),
 AnchorPoint=Vector2.new(0,1),
 BackgroundTransparency=1,
-Visible=aw.User.Enabled or false,
+Visible=aw.User.Enabled~=false,
 },{
 an.NewRoundFrame(aw.UICorner-(aw.UIPadding/2),"SquircleOutline",{
 Size=UDim2.new(1,0,1,0),
