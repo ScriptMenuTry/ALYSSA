@@ -28646,82 +28646,127 @@ Icon=Color3.fromHex"#ffffff",
 Sovereign={
 Name="Sovereign",
 
+-- ⚡ Enchanted crimson: deep volcanic red bleeding into cursed magenta
 Accent=aa:Gradient({
-["0"]={Color=Color3.fromHex"#6B0000",Transparency=0},
-["50"]={Color=Color3.fromHex"#9B0505",Transparency=0},
-["100"]={Color=Color3.fromHex"#C8001A",Transparency=0},
-},{Rotation=135}),
+["0"]={Color=Color3.fromHex"#5C0000",Transparency=0},
+["30"]={Color=Color3.fromHex"#9A0010",Transparency=0},
+["60"]={Color=Color3.fromHex"#D4001F",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF0033",Transparency=0},
+},{Rotation=145}),
 
+-- Dialog: near-black obsidian with a smoldering ember undertone
 Dialog=aa:Gradient({
-["0"]={Color=Color3.fromHex"#0D0005",Transparency=0},
-["50"]={Color=Color3.fromHex"#1A000A",Transparency=0},
-["100"]={Color=Color3.fromHex"#260010",Transparency=0},
-},{Rotation=90}),
+["0"]={Color=Color3.fromHex"#080003",Transparency=0},
+["40"]={Color=Color3.fromHex"#110008",Transparency=0},
+["70"]={Color=Color3.fromHex"#1C000C",Transparency=0},
+["100"]={Color=Color3.fromHex"#240010",Transparency=0},
+},{Rotation=120}),
 
+-- Outline: electric lava glow — bright crimson to deep blood
 Outline=aa:Gradient({
-["0"]={Color=Color3.fromHex"#FF003C",Transparency=0},
-["50"]={Color=Color3.fromHex"#CC0022",Transparency=0},
-["100"]={Color=Color3.fromHex"#FF1A4D",Transparency=0},
-},{Rotation=45}),
+["0"]={Color=Color3.fromHex"#FF0040",Transparency=0},
+["25"]={Color=Color3.fromHex"#FF3060",Transparency=0},
+["50"]={Color=Color3.fromHex"#CC001A",Transparency=0},
+["75"]={Color=Color3.fromHex"#FF0040",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF204E",Transparency=0},
+},{Rotation=55}),
 
+-- Text: pure white with enchanted rose shimmer
 Text=aa:Gradient({
 ["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
-["100"]={Color=Color3.fromHex"#FFD6D6",Transparency=0},
+["60"]={Color=Color3.fromHex"#FFE8E8",Transparency=0},
+["100"]={Color=Color3.fromHex"#FFBBCC",Transparency=0},
 },{Rotation=45}),
 
-Placeholder=Color3.fromHex"#994455",
+Placeholder=Color3.fromHex"#883344",
 
+-- Window BG: deep void — almost pure black with a blood pulse
 Background=aa:Gradient({
-["0"]={Color=Color3.fromHex"#060008",Transparency=0},
-["40"]={Color=Color3.fromHex"#0E0005",Transparency=0},
-["70"]={Color=Color3.fromHex"#150008",Transparency=0},
-["100"]={Color=Color3.fromHex"#1A000D",Transparency=0},
-},{Rotation=160}),
+["0"]={Color=Color3.fromHex"#040002",Transparency=0},
+["25"]={Color=Color3.fromHex"#0A0005",Transparency=0},
+["55"]={Color=Color3.fromHex"#110007",Transparency=0},
+["80"]={Color=Color3.fromHex"#17000A",Transparency=0},
+["100"]={Color=Color3.fromHex"#1D000E",Transparency=0},
+},{Rotation=168}),
 
+-- Button: molten red shifting to enchanted neon crimson
 Button=aa:Gradient({
-["0"]={Color=Color3.fromHex"#8B0000",Transparency=0},
-["50"]={Color=Color3.fromHex"#B30015",Transparency=0},
-["100"]={Color=Color3.fromHex"#CC001A",Transparency=0},
-},{Rotation=45}),
+["0"]={Color=Color3.fromHex"#6B0000",Transparency=0},
+["35"]={Color=Color3.fromHex"#AA0010",Transparency=0},
+["65"]={Color=Color3.fromHex"#D4001C",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF0033",Transparency=0},
+},{Rotation=135}),
 
+-- Icon: fiery rose-red to hot coral enchant glow
 Icon=aa:Gradient({
-["0"]={Color=Color3.fromHex"#FF2244",Transparency=0},
-["100"]={Color=Color3.fromHex"#FF6688",Transparency=0},
-},{Rotation=45}),
+["0"]={Color=Color3.fromHex"#FF1040",Transparency=0},
+["40"]={Color=Color3.fromHex"#FF4466",Transparency=0},
+["70"]={Color=Color3.fromHex"#FF6080",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF88AA",Transparency=0},
+},{Rotation=55}),
 
+-- Toggle: volcanic lava pulse
 Toggle=aa:Gradient({
-["0"]={Color=Color3.fromHex"#CC0022",Transparency=0},
-["100"]={Color=Color3.fromHex"#FF1A4D",Transparency=0},
+["0"]={Color=Color3.fromHex"#B50020",Transparency=0},
+["50"]={Color=Color3.fromHex"#E0002A",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF1A45",Transparency=0},
 },{Rotation=45}),
 
+-- Slider: glowing ember trail
 Slider=aa:Gradient({
-["0"]={Color=Color3.fromHex"#9B0000",Transparency=0},
-["100"]={Color=Color3.fromHex"#FF003C",Transparency=0},
+["0"]={Color=Color3.fromHex"#7A0000",Transparency=0},
+["40"]={Color=Color3.fromHex"#BB0018",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF0030",Transparency=0},
 },{Rotation=45}),
 
+-- Checkbox: enchanted seal red
 Checkbox=aa:Gradient({
-["0"]={Color=Color3.fromHex"#CC0022",Transparency=0},
-["100"]={Color=Color3.fromHex"#FF1A4D",Transparency=0},
+["0"]={Color=Color3.fromHex"#BB001A",Transparency=0},
+["50"]={Color=Color3.fromHex"#E0002C",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF204E",Transparency=0},
 },{Rotation=45}),
 
-PanelBackground=Color3.fromHex"#1A000D",
-PanelBackgroundTransparency=0.75,
-
-LabelBackground=Color3.fromHex"#0D0005",
-LabelBackgroundTransparency=0.6,
-
-SliderIcon=Color3.fromHex"#FF4466",
-Primary=Color3.fromHex"#CC0022",
-
-ElementBackground=aa:Gradient({
-["0"]={Color=Color3.fromHex"#1F0010",Transparency=0},
-["100"]={Color=Color3.fromHex"#2E0018",Transparency=0},
+-- Panel: deep midnight maroon, nearly invisible glass
+PanelBackground=aa:Gradient({
+["0"]={Color=Color3.fromHex"#140008",Transparency=0},
+["100"]={Color=Color3.fromHex"#200010",Transparency=0},
 },{Rotation=90}),
+PanelBackgroundTransparency=0.72,
+
+-- Label: smoked obsidian glass
+LabelBackground=Color3.fromHex"#0A0004",
+LabelBackgroundTransparency=0.55,
+
+-- Slider knob: vivid enchanted glow
+SliderIcon=Color3.fromHex"#FF3355",
+
+-- Primary action: deep sovereign crimson
+Primary=Color3.fromHex"#D4001C",
+
+-- Element cards: dark maroon satin
+ElementBackground=aa:Gradient({
+["0"]={Color=Color3.fromHex"#1A0009",Transparency=0},
+["50"]={Color=Color3.fromHex"#260010",Transparency=0},
+["100"]={Color=Color3.fromHex"#300015",Transparency=0},
+},{Rotation=100}),
 ElementBackgroundTransparency=0,
 
+-- Window topbar title: glowing crimson
+WindowTopbarTitle=aa:Gradient({
+["0"]={Color=Color3.fromHex"#FF4466",Transparency=0},
+["100"]={Color=Color3.fromHex"#FFAABB",Transparency=0},
+},{Rotation=45}),
+
+-- Shadow: deep blood-black
+WindowShadow=Color3.fromHex"#1A0005",
+
+-- Scrollbar: blood rail
+ScrollBar=Color3.fromHex"#5C0010",
+ScrollBarBackground=Color3.fromHex"#0D0005",
+
 Metadata={
-Description="Sovereign — a blood-dark throne of crimson and void.",
-BackgroundGif="video:https://media0.giphy.com/media/96GnoTw2B0v00jYdat/giphy.mp4",
+Description="⚔ Sovereign — enchanted volcanic throne. Blood, void, and forbidden fire.",
+BackgroundImage="rbxassetid://85980736451901",
 },
 },
 }
@@ -29625,6 +29670,51 @@ Rotation=135,
 }),
 })
 
+-- Purple profile circle button
+local _profileCircle=ac("TextButton",{
+Size=UDim2.new(0,44,0,44),
+BackgroundColor3=Color3.fromHex"#1A0033",
+BackgroundTransparency=0.15,
+LayoutOrder=3,
+Name="ProfileCircle",
+Text="",
+ZIndex=99,
+},{
+ac("UICorner",{CornerRadius=UDim.new(1,0)}),
+ac("UIStroke",{
+Thickness=2,
+ApplyStrokeMode=Enum.ApplyStrokeMode.Border,
+Color=Color3.fromHex"#9B30FF",
+Transparency=0,
+},{
+ac("UIGradient",{
+Color=ColorSequence.new(Color3.fromHex"#CC44FF",Color3.fromHex"#5500BB"),
+Rotation=135,
+})
+}),
+ac("ImageLabel",{
+Size=UDim2.new(0,22,0,22),
+Position=UDim2.new(0.5,0,0.5,0),
+AnchorPoint=Vector2.new(0.5,0.5),
+BackgroundTransparency=1,
+Image="rbxassetid://6031094678",-- person icon
+ImageColor3=Color3.fromHex"#CC44FF",
+}),
+})
+-- Wire purple circle → show profile popup
+ab.AddSignal(_profileCircle.MouseButton1Click,function()
+if af._ShowProfilePopupFn then
+af._ShowProfilePopupFn()
+end
+end)
+ab.AddSignal(_profileCircle.MouseEnter,function()
+ad(_profileCircle,.1,{BackgroundTransparency=0.0}):Play()
+end)
+ab.AddSignal(_profileCircle.MouseLeave,function()
+ad(_profileCircle,.1,{BackgroundTransparency=0.15}):Play()
+end)
+ag.ProfileCircle=_profileCircle
+
 local am=ac("Frame",{
 Size=UDim2.new(0,0,0,44),
 AutomaticSize="X",
@@ -29642,6 +29732,7 @@ Padding=UDim.new(0,8),
 SortOrder="LayoutOrder",
 }),
 _avatarCircle,
+_profileCircle,
 })
 
 
@@ -38040,6 +38131,8 @@ _badge,
 _content.Parent=_pd.UIElements.Content
 end
 
+aw._ShowProfilePopupFn=_ShowProfilePopup
+
 an.AddSignal(f.MouseButton1Click,function()
 if aw.User.Callback then
 aw.User.Callback()
@@ -40114,8 +40207,8 @@ local b=true
 local d=aa.Themes[aA.Theme or"Dark"]
 
 if (aA.Theme=="Sovereign" or aa.Theme and aa.Theme.Name=="Sovereign") and not aA.Background then
-aA.Background="video:https://media0.giphy.com/media/96GnoTw2B0v00jYdat/giphy.mp4"
-aA.BackgroundImageTransparency=aA.BackgroundImageTransparency or 0
+aA.Background="rbxassetid://85980736451901"
+aA.BackgroundImageTransparency=aA.BackgroundImageTransparency or 0.08
 end
 
 as.SetTheme(d)
