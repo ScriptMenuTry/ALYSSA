@@ -37936,8 +37936,16 @@ else
 aw.User:Disable()
 end
 
-local function _ShowProfilePopup()
+-- Build the profile panel once, parented to the main window frame
+-- It slides over the whole content area when the user button is clicked
+local _profilePanel
+local _profileVisible=false
 local _lp=ak.LocalPlayer
+
+local function _buildProfilePanel()
+if _profilePanel then return end
+
+local _fnt=an.Font
 local _userId=aw.User.Anonymous and 1 or _lp.UserId
 local _name=aw.User.Anonymous and"Anonymous"or _lp.Name
 local _displayName=aw.User.Anonymous and"Anonymous"or _lp.DisplayName
@@ -37945,159 +37953,339 @@ local _acctAge=_lp.AccountAge
 local _years=math.floor(_acctAge/365)
 local _months=math.floor((_acctAge%365)/30)
 local _ageStr=(_years>0 and _years.."y " or "")..(_months>0 and _months.."mo" or (_years==0 and _acctAge.."d" or ""))
-local _thumb=pcall(function()
-return ak:GetUserThumbnailAsync(_userId,Enum.ThumbnailType.HeadShot,Enum.ThumbnailSize.Size420x420)
-end)
+
 local _thumbImg=""
+task.spawn(function()
 local _ok,_res=pcall(function()
 return ak:GetUserThumbnailAsync(_userId,Enum.ThumbnailType.HeadShot,Enum.ThumbnailSize.Size420x420)
 end)
-if _ok then _thumbImg=_res end
+if _ok and _res then
+_thumbImg=_res
+if _profilePanel then
+_profilePanel.AvatarImg.Image=_thumbImg
+end
+end
+end)
 
-local _pu=a.load'u'
-local _pd=_pu.Create(true,"Popup",aw,av.WindUI,av.WindUI.ScreenGui.Popups)
-_pd.UIElements.Main.AutomaticSize="Y"
-_pd.UIElements.Main.Size=UDim2.new(0,420,0,0)
-
-local _new=a.load'j'.New
-local _fnt=a.load'j'.Font
-
-local _avatar=_new("ImageLabel",{
-Image=_thumbImg,
-Size=UDim2.new(0,72,0,72),
-BackgroundTransparency=0.85,
-BackgroundColor3=Color3.fromHex"#3B0010",
-ScaleType=Enum.ScaleType.Fit,
+-- helper: a row with label + value
+local function _row(label,val,order)
+return ao("Frame",{
+Size=UDim2.new(1,-16,0,36),
+BackgroundColor3=Color3.fromHex"#1A0009",
+BackgroundTransparency=0.3,
+LayoutOrder=order,
 },{
-_new("UICorner",{CornerRadius=UDim.new(1,0)}),
-_new("UIStroke",{
-Thickness=2,
-ApplyStrokeMode=Enum.ApplyStrokeMode.Border,
-Color=Color3.fromHex"#CC0022",
-Transparency=0,
-}),
-})
-
-local function _row(label,val)
-return _new("Frame",{
-Size=UDim2.new(1,0,0,32),
-BackgroundTransparency=1,
-},{
-_new("UIListLayout",{FillDirection="Horizontal",Padding=UDim.new(0,8),VerticalAlignment="Center"}),
-_new("TextLabel",{
+ao("UICorner",{CornerRadius=UDim.new(0,8)}),
+ao("UIListLayout",{FillDirection="Horizontal",Padding=UDim.new(0,8),VerticalAlignment="Center"}),
+ao("UIPadding",{PaddingLeft=UDim.new(0,10),PaddingRight=UDim.new(0,10)}),
+ao("TextLabel",{
 Text=label,
-TextSize=14,
+TextSize=13,
 BackgroundTransparency=1,
-Size=UDim2.new(0,110,1,0),
+Size=UDim2.new(0,100,1,0),
 TextXAlignment="Left",
 FontFace=Font.new(_fnt,Enum.FontWeight.SemiBold),
-TextTransparency=0.4,
+TextTransparency=0.45,
 ThemeTag={TextColor3="Text"},
 }),
-_new("TextLabel",{
+ao("TextLabel",{
 Text=val,
-TextSize=15,
+TextSize=14,
 BackgroundTransparency=1,
-AutomaticSize="X",
-Size=UDim2.new(0,0,1,0),
+Size=UDim2.new(1,-108,1,0),
 TextXAlignment="Left",
 FontFace=Font.new(_fnt,Enum.FontWeight.Medium),
+TextTruncate="AtEnd",
 ThemeTag={TextColor3="Text"},
 }),
 })
 end
 
-local _divider=_new("Frame",{
-Size=UDim2.new(1,0,0,1),
-BackgroundTransparency=0.85,
-ThemeTag={BackgroundColor3="Text"},
+-- helper: divider
+local function _divider(order)
+return ao("Frame",{
+Size=UDim2.new(1,-16,0,1),
+BackgroundColor3=Color3.fromHex"#FF0040",
+BackgroundTransparency=0.82,
+LayoutOrder=order,
+})
+end
+
+-- Section header
+local function _sectionLabel(txt,order)
+return ao("TextLabel",{
+Text=txt,
+TextSize=11,
+BackgroundTransparency=1,
+Size=UDim2.new(1,-16,0,18),
+TextXAlignment="Left",
+FontFace=Font.new(_fnt,Enum.FontWeight.Bold),
+TextTransparency=0.45,
+LayoutOrder=order,
+ThemeTag={TextColor3="Icon"},
+})
+end
+
+-- Avatar circle
+local _avatarImg=ao("ImageLabel",{
+Image=_thumbImg,
+Size=UDim2.new(0,76,0,76),
+BackgroundColor3=Color3.fromHex"#200010",
+BackgroundTransparency=0.0,
+ScaleType=Enum.ScaleType.Fit,
+Name="AvatarImg",
+},{
+ao("UICorner",{CornerRadius=UDim.new(1,0)}),
+ao("UIStroke",{
+Thickness=2.5,
+ApplyStrokeMode=Enum.ApplyStrokeMode.Border,
+Color=Color3.fromHex"#FF0040",
+Transparency=0,
+},{
+ao("UIGradient",{
+Color=ColorSequence.new(Color3.fromHex"#FF204E",Color3.fromHex"#8B0000"),
+Rotation=135,
+})
+}),
 })
 
-local _badge=_new("TextLabel",{
-Text="⚔ Wind Ui Modified By CARL!",
-TextSize=13,
+-- Close button (back arrow)
+local _closeBtn=ao("TextButton",{
+Size=UDim2.new(0,32,0,32),
+BackgroundTransparency=0.75,
+BackgroundColor3=Color3.fromHex"#300010",
+Text="←",
+TextSize=18,
+TextColor3=Color3.fromHex"#FF4466",
+FontFace=Font.new(_fnt,Enum.FontWeight.Bold),
+Name="CloseBtn",
+ZIndex=10,
+},{
+ao("UICorner",{CornerRadius=UDim.new(0,8)}),
+})
+
+-- Sovereign badge
+local _sovereignBadge=ao("TextLabel",{
+Text="⚔  SOVEREIGN",
+TextSize=10,
+BackgroundColor3=Color3.fromHex"#3B0010",
+BackgroundTransparency=0.5,
+AutomaticSize="X",
+Size=UDim2.new(0,0,0,20),
+TextXAlignment="Center",
+FontFace=Font.new(_fnt,Enum.FontWeight.Bold),
+TextColor3=Color3.fromHex"#FF4466",
+LayoutOrder=0,
+},{
+ao("UICorner",{CornerRadius=UDim.new(1,0)}),
+ao("UIStroke",{
+Thickness=1,
+Color=Color3.fromHex"#FF0040",
+Transparency=0.5,
+}),
+ao("UIPadding",{
+PaddingLeft=UDim.new(0,8),PaddingRight=UDim.new(0,8),
+}),
+})
+
+-- Carl credit badge
+local _carlBadge=ao("TextLabel",{
+Text="⚔  Wind Ui Modified By CARL!",
+TextSize=11,
 BackgroundTransparency=1,
 AutomaticSize="XY",
-FontFace=Font.new(_fnt,Enum.FontWeight.SemiBold),
-TextTransparency=0.0,
-ThemeTag={TextColor3="Button"},
+Size=UDim2.new(0,0,0,0),
 TextXAlignment="Left",
+FontFace=Font.new(_fnt,Enum.FontWeight.SemiBold),
+TextColor3=Color3.fromHex"#CC0022",
+LayoutOrder=99,
 })
 
-local _content=_new("Frame",{
-Size=UDim2.new(1,0,0,0),
-AutomaticSize="Y",
+-- Scrollable content list
+local _scroll=ao("ScrollingFrame",{
+Size=UDim2.new(1,0,1,-(52+aw.UIPadding*2)),
+Position=UDim2.new(0,0,0,52),
 BackgroundTransparency=1,
+ScrollBarThickness=2,
+ScrollBarImageColor3=Color3.fromHex"#FF0040",
+BorderSizePixel=0,
+AutomaticCanvasSize="Y",
+CanvasSize=UDim2.new(0,0,0,0),
 },{
-_new("UIListLayout",{Padding=UDim.new(0,10),SortOrder="LayoutOrder"}),
-_new("Frame",{
-Size=UDim2.new(1,0,0,0),
-AutomaticSize="Y",
-BackgroundTransparency=1,
+ao("UIListLayout",{
+Padding=UDim.new(0,6),
+HorizontalAlignment="Center",
+SortOrder="LayoutOrder",
+}),
+ao("UIPadding",{PaddingTop=UDim.new(0,10),PaddingBottom=UDim.new(0,10)}),
+
+-- Avatar + name hero row
+ao("Frame",{
+Size=UDim2.new(1,-16,0,96),
+BackgroundColor3=Color3.fromHex"#1A0009",
+BackgroundTransparency=0.25,
 LayoutOrder=1,
 },{
-_new("UIListLayout",{FillDirection="Horizontal",Padding=UDim.new(0,16),VerticalAlignment="Center"}),
-_avatar,
-_new("Frame",{
-AutomaticSize="XY",
+ao("UICorner",{CornerRadius=UDim.new(0,12)}),
+ao("UIStroke",{
+Thickness=1,
+Color=Color3.fromHex"#FF0040",
+Transparency=0.75,
+}),
+ao("UIListLayout",{
+FillDirection="Horizontal",
+Padding=UDim.new(0,14),
+VerticalAlignment="Center",
+}),
+ao("UIPadding",{PaddingLeft=UDim.new(0,12),PaddingRight=UDim.new(0,12)}),
+_avatarImg,
+ao("Frame",{
+AutomaticSize="Y",
+BackgroundTransparency=1,
+Size=UDim2.new(1,-90,0,0),
+},{
+ao("UIListLayout",{Padding=UDim.new(0,3),SortOrder="LayoutOrder"}),
+ao("TextLabel",{
+Text=_displayName,
+TextSize=18,
+BackgroundTransparency=1,
+AutomaticSize="Y",
+Size=UDim2.new(1,0,0,0),
+TextXAlignment="Left",
+FontFace=Font.new(_fnt,Enum.FontWeight.Bold),
+TextTruncate="AtEnd",
+ThemeTag={TextColor3="Text"},
+LayoutOrder=1,
+}),
+ao("TextLabel",{
+Text="@".._name,
+TextSize=13,
+BackgroundTransparency=1,
+AutomaticSize="Y",
+Size=UDim2.new(1,0,0,0),
+TextXAlignment="Left",
+FontFace=Font.new(_fnt,Enum.FontWeight.Medium),
+TextTransparency=0.45,
+ThemeTag={TextColor3="Text"},
+LayoutOrder=2,
+}),
+_sovereignBadge,
+}),
+}),
+
+_divider(2),
+_sectionLabel("PROFILE INFO",3),
+_row("Username",_name,4),
+_row("Display",_displayName,5),
+_row("User ID",tostring(_lp.UserId),6),
+_row("Acct Age",_ageStr,7),
+
+_divider(8),
+_sectionLabel("ABOUT",9),
+_carlBadge,
+})
+
+-- Main panel frame — covers the whole window content area
+_profilePanel=ao("Frame",{
+Size=UDim2.new(1,0,1,0),
+Position=UDim2.new(0,0,1,0), -- starts off-screen below
+BackgroundColor3=Color3.fromHex"#060002",
+BackgroundTransparency=0.0,
+ZIndex=50,
+Visible=false,
+Name="ProfilePanel",
+},{
+ao("UICorner",{CornerRadius=UDim.new(0,aw.UICorner)}),
+-- Sovereign top gradient bar
+ao("Frame",{
+Size=UDim2.new(1,0,0,3),
+BackgroundTransparency=0,
+BackgroundColor3=Color3.fromHex"#FF0040",
+ZIndex=51,
+},{
+ao("UICorner",{CornerRadius=UDim.new(0,aw.UICorner)}),
+ao("UIGradient",{
+Color=ColorSequence.new(Color3.fromHex"#FF204E",Color3.fromHex"#8B0000"),
+Rotation=0,
+}),
+}),
+-- Top bar with close button + title
+ao("Frame",{
+Size=UDim2.new(1,0,0,52),
 BackgroundTransparency=1,
 },{
-_new("UIListLayout",{Padding=UDim.new(0,4),SortOrder="LayoutOrder"}),
-_new("TextLabel",{
-Text=_displayName,
-TextSize=20,
+ao("UIListLayout",{
+FillDirection="Horizontal",
+VerticalAlignment="Center",
+Padding=UDim.new(0,8),
+}),
+ao("UIPadding",{PaddingLeft=UDim.new(0,10),PaddingRight=UDim.new(0,10)}),
+_closeBtn,
+ao("TextLabel",{
+Text="Profile",
+TextSize=18,
 BackgroundTransparency=1,
 AutomaticSize="XY",
 FontFace=Font.new(_fnt,Enum.FontWeight.Bold),
-ThemeTag={TextColor3="Text"},
-LayoutOrder=1,
-}),
-_new("TextLabel",{
-Text="@".._name,
-TextSize=14,
-BackgroundTransparency=1,
-AutomaticSize="XY",
-FontFace=Font.new(_fnt,Enum.FontWeight.Medium),
-TextTransparency=0.4,
-ThemeTag={TextColor3="Text"},
-LayoutOrder=2,
+TextColor3=Color3.fromHex"#FFFFFF",
 }),
 }),
-}),
-_new("Frame",{
-Size=UDim2.new(1,0,0,1),
-BackgroundTransparency=0.85,
-LayoutOrder=2,
-ThemeTag={BackgroundColor3="Text"},
-}),
-_new("Frame",{
-Size=UDim2.new(1,0,0,0),
-AutomaticSize="Y",
-BackgroundTransparency=1,
-LayoutOrder=3,
+_scroll,
+-- Bottom vignette glow
+ao("Frame",{
+Size=UDim2.new(1,0,0,40),
+Position=UDim2.new(0,0,1,-40),
+BackgroundColor3=Color3.fromHex"#1A0009",
+BackgroundTransparency=0.0,
+ZIndex=52,
 },{
-_new("UIListLayout",{Padding=UDim.new(0,6),SortOrder="LayoutOrder"}),
-_row("Username:",_name),
-_row("Display Name:",_displayName),
-_row("User ID:",tostring(_lp.UserId)),
-_row("Account Age:",_ageStr),
+ao("UIGradient",{
+Transparency=NumberSequence.new{
+NumberSequenceKeypoint.new(0,1),
+NumberSequenceKeypoint.new(1,0),
+},
+Rotation=270,
 }),
-_new("Frame",{
-Size=UDim2.new(1,0,0,1),
-BackgroundTransparency=0.85,
-LayoutOrder=4,
-ThemeTag={BackgroundColor3="Text"},
-}),
-_new("Frame",{
-Size=UDim2.new(1,0,0,32),
-BackgroundTransparency=1,
-LayoutOrder=5,
-},{
-_badge,
 }),
 })
 
-_content.Parent=_pd.UIElements.Content
+-- Parent panel to the main window frame (over everything)
+local _winMain=aw.UIElements.Main and aw.UIElements.Main.Main
+if _winMain then
+_profilePanel.Parent=_winMain
+else
+_profilePanel.Parent=aw.UIElements.Main or av.WindUI.ScreenGui.Window
+end
+
+-- Close button click → slide panel back down
+an.AddSignal(_closeBtn.MouseButton1Click,function()
+if not _profileVisible then return end
+_profileVisible=false
+ap(_profilePanel,0.28,{Position=UDim2.new(0,0,1,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.In):Play()
+task.delay(0.3,function()
+if not _profileVisible then
+_profilePanel.Visible=false
+end
+end)
+end)
+end
+
+local function _ShowProfilePopup()
+_buildProfilePanel()
+if _profileVisible then
+-- already open — close it
+_profileVisible=false
+ap(_profilePanel,0.28,{Position=UDim2.new(0,0,1,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.In):Play()
+task.delay(0.3,function()
+if not _profileVisible then _profilePanel.Visible=false end
+end)
+else
+-- slide in from bottom
+_profileVisible=true
+_profilePanel.Position=UDim2.new(0,0,1,0)
+_profilePanel.Visible=true
+ap(_profilePanel,0.32,{Position=UDim2.new(0,0,0,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+end
 end
 
 aw._ShowProfilePopupFn=_ShowProfilePopup
