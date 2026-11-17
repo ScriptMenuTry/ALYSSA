@@ -29818,6 +29818,11 @@ local ap=ab.Drag(am)
 
 function ag.Visible(aq,ar)
 am.Visible=ar
+-- ar=false means window is opening → hide avatar to stop it floating above window
+-- ar=true means window is closing → show avatar again
+if _avatarCircle then
+_avatarCircle.Visible=ar
+end
 end
 
 function ag.SetScale(aq,ar)
@@ -38185,13 +38190,14 @@ _sectionLabel("ABOUT",9),
 _carlBadge,
 })
 
--- Main panel frame — covers the whole window content area
+-- Main panel frame — covers the content (MainBar) area only
 _profilePanel=ao("Frame",{
 Size=UDim2.new(1,0,1,0),
-Position=UDim2.new(0,0,1,0), -- starts off-screen below
+Position=UDim2.new(0,0,1.05,0), -- starts just below MainBar
 BackgroundColor3=Color3.fromHex"#060002",
 BackgroundTransparency=0.0,
-ZIndex=50,
+ZIndex=100,
+ClipsDescendants=true,
 Visible=false,
 Name="ProfilePanel",
 },{
@@ -38249,20 +38255,18 @@ Rotation=270,
 }),
 })
 
--- Parent panel to the main window frame (over everything)
-local _winMain=aw.UIElements.Main and aw.UIElements.Main.Main
-if _winMain then
-_profilePanel.Parent=_winMain
-else
-_profilePanel.Parent=aw.UIElements.Main or av.WindUI.ScreenGui.Window
-end
+-- Parent panel to MainBar so it only covers the content area, not the sidebar
+local _target=aw.UIElements.MainBar or (aw.UIElements.Main and aw.UIElements.Main.Main) or av.WindUI.ScreenGui.Window
+_profilePanel.Parent=_target
+-- MainBar uses corner radius — clip children
+_profilePanel.ClipsDescendants=false
 
 -- Close button click → slide panel back down
 an.AddSignal(_closeBtn.MouseButton1Click,function()
 if not _profileVisible then return end
 _profileVisible=false
-ap(_profilePanel,0.28,{Position=UDim2.new(0,0,1,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.In):Play()
-task.delay(0.3,function()
+ap(_profilePanel,0.28,{Position=UDim2.new(0,0,1.05,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.In):Play()
+task.delay(0.32,function()
 if not _profileVisible then
 _profilePanel.Visible=false
 end
@@ -38273,16 +38277,16 @@ end
 local function _ShowProfilePopup()
 _buildProfilePanel()
 if _profileVisible then
--- already open — close it
+-- already open — slide back down
 _profileVisible=false
-ap(_profilePanel,0.28,{Position=UDim2.new(0,0,1,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.In):Play()
-task.delay(0.3,function()
+ap(_profilePanel,0.28,{Position=UDim2.new(0,0,1.05,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.In):Play()
+task.delay(0.32,function()
 if not _profileVisible then _profilePanel.Visible=false end
 end)
 else
--- slide in from bottom
+-- slide up from bottom into content area
 _profileVisible=true
-_profilePanel.Position=UDim2.new(0,0,1,0)
+_profilePanel.Position=UDim2.new(0,0,1.05,0)
 _profilePanel.Visible=true
 ap(_profilePanel,0.32,{Position=UDim2.new(0,0,0,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end
