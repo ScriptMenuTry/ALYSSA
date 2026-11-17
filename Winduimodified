@@ -25068,10 +25068,20 @@ end
 return z
 end
 
+local _defaultFont="rbxassetid://12187365364"
+
 function p.SetTheme(r)
 local u=p.Theme
 p.Theme=r
 p.UpdateTheme(nil,false)
+
+-- Auto-apply theme-specific font, restore default when switching away
+if r and r.Font then
+p.UpdateFont(r.Font)
+elseif u and u.Font then
+-- Previous theme had a custom font; restore default
+p.UpdateFont(_defaultFont)
+end
 
 for v,x in next,p.ThemeChangeCallbacks do
 p.SafeCallback(x,r,u)
@@ -28764,6 +28774,9 @@ WindowShadow=Color3.fromHex"#1A0005",
 ScrollBar=Color3.fromHex"#5C0010",
 ScrollBarBackground=Color3.fromHex"#0D0005",
 
+-- Minecraft pixel font applied automatically when Sovereign theme loads
+Font="rbxassetid://7085338559",
+
 Metadata={
 Description="⚔ Sovereign — enchanted volcanic throne. Blood, void, and forbidden fire.",
 BackgroundImage="rbxassetid://85980736451901",
@@ -29670,50 +29683,6 @@ Rotation=135,
 }),
 })
 
--- Purple profile circle button
-local _profileCircle=ac("TextButton",{
-Size=UDim2.new(0,44,0,44),
-BackgroundColor3=Color3.fromHex"#1A0033",
-BackgroundTransparency=0.15,
-LayoutOrder=3,
-Name="ProfileCircle",
-Text="",
-ZIndex=99,
-},{
-ac("UICorner",{CornerRadius=UDim.new(1,0)}),
-ac("UIStroke",{
-Thickness=2,
-ApplyStrokeMode=Enum.ApplyStrokeMode.Border,
-Color=Color3.fromHex"#9B30FF",
-Transparency=0,
-},{
-ac("UIGradient",{
-Color=ColorSequence.new(Color3.fromHex"#CC44FF",Color3.fromHex"#5500BB"),
-Rotation=135,
-})
-}),
-ac("ImageLabel",{
-Size=UDim2.new(0,22,0,22),
-Position=UDim2.new(0.5,0,0.5,0),
-AnchorPoint=Vector2.new(0.5,0.5),
-BackgroundTransparency=1,
-Image="rbxassetid://6031094678",-- person icon
-ImageColor3=Color3.fromHex"#CC44FF",
-}),
-})
--- Wire purple circle → show profile popup
-ab.AddSignal(_profileCircle.MouseButton1Click,function()
-if af._ShowProfilePopupFn then
-af._ShowProfilePopupFn()
-end
-end)
-ab.AddSignal(_profileCircle.MouseEnter,function()
-ad(_profileCircle,.1,{BackgroundTransparency=0.0}):Play()
-end)
-ab.AddSignal(_profileCircle.MouseLeave,function()
-ad(_profileCircle,.1,{BackgroundTransparency=0.15}):Play()
-end)
-ag.ProfileCircle=_profileCircle
 
 local am=ac("Frame",{
 Size=UDim2.new(0,0,0,44),
@@ -29732,7 +29701,6 @@ Padding=UDim.new(0,8),
 SortOrder="LayoutOrder",
 }),
 _avatarCircle,
-_profileCircle,
 })
 
 
