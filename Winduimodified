@@ -29585,14 +29585,63 @@ BackgroundColor3=Color3.new(1,1,1),
 BackgroundTransparency=.9,
 })
 
+local _avatarCircle
+task.spawn(function()
+local _lp=(cloneref or clonereference or function(v)return v end)(game:GetService"Players").LocalPlayer
+if _lp then
+local _ok,_img=pcall(function()
+return (cloneref or clonereference or function(v)return v end)(game:GetService"Players"):GetUserThumbnailAsync(
+_lp.UserId,
+Enum.ThumbnailType.HeadShot,
+Enum.ThumbnailSize.Size100x100
+)
+end)
+if _ok and _avatarCircle then
+_avatarCircle.Image=_img or""
+end
+end
+end)
+
+_avatarCircle=ac("ImageLabel",{
+Image="",
+Size=UDim2.new(0,44,0,44),
+BackgroundTransparency=0.85,
+BackgroundColor3=Color3.fromHex"#1A000D",
+ScaleType=Enum.ScaleType.Fit,
+LayoutOrder=2,
+Name="AvatarCircle",
+},{
+ac("UICorner",{CornerRadius=UDim.new(1,0)}),
+ac("UIStroke",{
+Thickness=2,
+ApplyStrokeMode=Enum.ApplyStrokeMode.Border,
+Color=Color3.fromHex"#CC0022",
+Transparency=0,
+},{
+ac("UIGradient",{
+Color=ColorSequence.new(Color3.fromHex"#FF003C",Color3.fromHex"#8B0000"),
+Rotation=135,
+})
+}),
+})
+
 local am=ac("Frame",{
-Size=UDim2.new(0,0,0,0),
+Size=UDim2.new(0,0,0,44),
+AutomaticSize="X",
 Position=UDim2.new(0.5,0,0,28),
 AnchorPoint=Vector2.new(0.5,0.5),
 Parent=af.Parent,
 BackgroundTransparency=1,
 Active=true,
 Visible=false,
+},{
+ac("UIListLayout",{
+FillDirection="Horizontal",
+VerticalAlignment="Center",
+Padding=UDim.new(0,8),
+SortOrder="LayoutOrder",
+}),
+_avatarCircle,
 })
 
 
@@ -29605,6 +29654,7 @@ Size=UDim2.new(0,0,0,44),
 AutomaticSize="X",
 Parent=am,
 Active=false,
+LayoutOrder=1,
 BackgroundTransparency=.25,
 ZIndex=99,
 BackgroundColor3=Color3.new(0,0,0),
@@ -29620,7 +29670,8 @@ Color=Color3.new(1,1,1),
 Transparency=0,
 },{
 ac("UIGradient",{
-Color=ColorSequence.new(Color3.fromHex"40c9ff",Color3.fromHex"e81cff")
+Color=ColorSequence.new(Color3.fromHex"FF003C",Color3.fromHex"8B0000"),
+Rotation=135,
 })
 }),
 ak,
@@ -29692,10 +29743,7 @@ end
 
 
 ab.AddSignal(ao:GetPropertyChangedSignal"AbsoluteSize",function()
-am.Size=UDim2.new(
-0,ao.AbsoluteSize.X,
-0,ao.AbsoluteSize.Y
-)
+-- am auto-sizes via UIListLayout; no manual size sync needed
 end)
 
 ab.AddSignal(ao.TextButton.MouseEnter,function()
@@ -29729,7 +29777,7 @@ CornerRadius=ar.CornerRadius or UDim.new(1,0),
 StrokeThickness=ar.StrokeThickness or 2,
 Scale=ar.Scale or 1,
 Color=ar.Color
-or ColorSequence.new(Color3.fromHex"40c9ff",Color3.fromHex"e81cff"),
+or ColorSequence.new(Color3.fromHex"FF003C",Color3.fromHex"8B0000"),
 }
 
 
@@ -37828,9 +37876,175 @@ else
 aw.User:Disable()
 end
 
-if aw.User.Callback then
+local function _ShowProfilePopup()
+local _lp=ak.LocalPlayer
+local _userId=aw.User.Anonymous and 1 or _lp.UserId
+local _name=aw.User.Anonymous and"Anonymous"or _lp.Name
+local _displayName=aw.User.Anonymous and"Anonymous"or _lp.DisplayName
+local _acctAge=_lp.AccountAge
+local _years=math.floor(_acctAge/365)
+local _months=math.floor((_acctAge%365)/30)
+local _ageStr=(_years>0 and _years.."y " or "")..(_months>0 and _months.."mo" or (_years==0 and _acctAge.."d" or ""))
+local _thumb=pcall(function()
+return ak:GetUserThumbnailAsync(_userId,Enum.ThumbnailType.HeadShot,Enum.ThumbnailSize.Size420x420)
+end)
+local _thumbImg=""
+local _ok,_res=pcall(function()
+return ak:GetUserThumbnailAsync(_userId,Enum.ThumbnailType.HeadShot,Enum.ThumbnailSize.Size420x420)
+end)
+if _ok then _thumbImg=_res end
+
+local _pu=a.load'u'
+local _pd=_pu.Create(true,"Popup",aw,av.WindUI,av.WindUI.ScreenGui.Popups)
+_pd.UIElements.Main.AutomaticSize="Y"
+_pd.UIElements.Main.Size=UDim2.new(0,420,0,0)
+
+local _new=a.load'j'.New
+local _fnt=a.load'j'.Font
+
+local _avatar=_new("ImageLabel",{
+Image=_thumbImg,
+Size=UDim2.new(0,72,0,72),
+BackgroundTransparency=0.85,
+BackgroundColor3=Color3.fromHex"#3B0010",
+ScaleType=Enum.ScaleType.Fit,
+},{
+_new("UICorner",{CornerRadius=UDim.new(1,0)}),
+_new("UIStroke",{
+Thickness=2,
+ApplyStrokeMode=Enum.ApplyStrokeMode.Border,
+Color=Color3.fromHex"#CC0022",
+Transparency=0,
+}),
+})
+
+local function _row(label,val)
+return _new("Frame",{
+Size=UDim2.new(1,0,0,32),
+BackgroundTransparency=1,
+},{
+_new("UIListLayout",{FillDirection="Horizontal",Padding=UDim.new(0,8),VerticalAlignment="Center"}),
+_new("TextLabel",{
+Text=label,
+TextSize=14,
+BackgroundTransparency=1,
+Size=UDim2.new(0,110,1,0),
+TextXAlignment="Left",
+FontFace=Font.new(_fnt,Enum.FontWeight.SemiBold),
+TextTransparency=0.4,
+ThemeTag={TextColor3="Text"},
+}),
+_new("TextLabel",{
+Text=val,
+TextSize=15,
+BackgroundTransparency=1,
+AutomaticSize="X",
+Size=UDim2.new(0,0,1,0),
+TextXAlignment="Left",
+FontFace=Font.new(_fnt,Enum.FontWeight.Medium),
+ThemeTag={TextColor3="Text"},
+}),
+})
+end
+
+local _divider=_new("Frame",{
+Size=UDim2.new(1,0,0,1),
+BackgroundTransparency=0.85,
+ThemeTag={BackgroundColor3="Text"},
+})
+
+local _badge=_new("TextLabel",{
+Text="⚔ Wind Ui Modified By CARL!",
+TextSize=13,
+BackgroundTransparency=1,
+AutomaticSize="XY",
+FontFace=Font.new(_fnt,Enum.FontWeight.SemiBold),
+TextTransparency=0.0,
+ThemeTag={TextColor3="Button"},
+TextXAlignment="Left",
+})
+
+local _content=_new("Frame",{
+Size=UDim2.new(1,0,0,0),
+AutomaticSize="Y",
+BackgroundTransparency=1,
+},{
+_new("UIListLayout",{Padding=UDim.new(0,10),SortOrder="LayoutOrder"}),
+_new("Frame",{
+Size=UDim2.new(1,0,0,0),
+AutomaticSize="Y",
+BackgroundTransparency=1,
+LayoutOrder=1,
+},{
+_new("UIListLayout",{FillDirection="Horizontal",Padding=UDim.new(0,16),VerticalAlignment="Center"}),
+_avatar,
+_new("Frame",{
+AutomaticSize="XY",
+BackgroundTransparency=1,
+},{
+_new("UIListLayout",{Padding=UDim.new(0,4),SortOrder="LayoutOrder"}),
+_new("TextLabel",{
+Text=_displayName,
+TextSize=20,
+BackgroundTransparency=1,
+AutomaticSize="XY",
+FontFace=Font.new(_fnt,Enum.FontWeight.Bold),
+ThemeTag={TextColor3="Text"},
+LayoutOrder=1,
+}),
+_new("TextLabel",{
+Text="@".._name,
+TextSize=14,
+BackgroundTransparency=1,
+AutomaticSize="XY",
+FontFace=Font.new(_fnt,Enum.FontWeight.Medium),
+TextTransparency=0.4,
+ThemeTag={TextColor3="Text"},
+LayoutOrder=2,
+}),
+}),
+}),
+_new("Frame",{
+Size=UDim2.new(1,0,0,1),
+BackgroundTransparency=0.85,
+LayoutOrder=2,
+ThemeTag={BackgroundColor3="Text"},
+}),
+_new("Frame",{
+Size=UDim2.new(1,0,0,0),
+AutomaticSize="Y",
+BackgroundTransparency=1,
+LayoutOrder=3,
+},{
+_new("UIListLayout",{Padding=UDim.new(0,6),SortOrder="LayoutOrder"}),
+_row("Username:",_name),
+_row("Display Name:",_displayName),
+_row("User ID:",tostring(_lp.UserId)),
+_row("Account Age:",_ageStr),
+}),
+_new("Frame",{
+Size=UDim2.new(1,0,0,1),
+BackgroundTransparency=0.85,
+LayoutOrder=4,
+ThemeTag={BackgroundColor3="Text"},
+}),
+_new("Frame",{
+Size=UDim2.new(1,0,0,32),
+BackgroundTransparency=1,
+LayoutOrder=5,
+},{
+_badge,
+}),
+})
+
+_content.Parent=_pd.UIElements.Content
+end
+
 an.AddSignal(f.MouseButton1Click,function()
+if aw.User.Callback then
 aw.User.Callback()
+end
+_ShowProfilePopup()
 end)
 an.AddSignal(f.MouseEnter,function()
 ap(f.UserIcon,0.04,{ImageTransparency=0.95}):Play()
@@ -37840,7 +38054,6 @@ an.AddSignal(f.InputEnded,function()
 ap(f.UserIcon,0.04,{ImageTransparency=1}):Play()
 ap(f.Outline,0.04,{ImageTransparency=1}):Play()
 end)
-end
 end
 
 local g
@@ -37882,7 +38095,9 @@ if typeof(aw.Background)=="string"and m then
 i=true
 
 if string.find(m,"http")then
-local u=(aw.Folder or"Temp").."/assets/."..an.SanitizeFilename(m)..".webm"
+local _vext=m:match("%.(%w+)%??[^/]*$")or"webm"
+if _vext~="mp4"and _vext~="webm"and _vext~="ogg"then _vext="webm" end
+local u=(aw.Folder or"Temp").."/assets/."..an.SanitizeFilename(m).."."..(_vext)
 if not isfile(u)then
 local v,x=pcall(function()
 
@@ -38013,8 +38228,14 @@ Name="Frame",
 })
 
 function createAuthor(v)
+local _displayText=v
+if not _displayText or _displayText==""then
+_displayText="Wind Ui Modified By CARL!"
+elseif not string.find(_displayText,"Modified By",1,true) and not string.find(_displayText,"CARL",1,true) then
+_displayText=v.." | Wind Ui Modified By CARL!"
+end
 return ao("TextLabel",{
-Text=v,
+Text=_displayText,
 FontFace=Font.new(an.Font,Enum.FontWeight.Medium),
 BackgroundTransparency=1,
 TextTransparency=0.35,
