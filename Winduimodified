@@ -28721,7 +28721,7 @@ ElementBackgroundTransparency=0,
 
 Metadata={
 Description="Sovereign — a blood-dark throne of crimson and void.",
-BackgroundGif="https://media0.giphy.com/media/96GnoTw2B0v00jYdat/giphy.gif",
+BackgroundGif="video:https://media0.giphy.com/media/96GnoTw2B0v00jYdat/giphy.mp4",
 },
 },
 }
@@ -37869,7 +37869,7 @@ local v=u:match"^([^?#]+)"or u
 local x=v:match"%.(%w+)$"
 if x then
 x=x:lower()
-if x=="jpg"or x=="jpeg"or x=="png"or x=="webp"then
+if x=="jpg"or x=="jpeg"or x=="png"or x=="webp"or x=="gif"then
 return"."..x
 end
 end
@@ -39893,8 +39893,8 @@ local b=true
 local d=aa.Themes[aA.Theme or"Dark"]
 
 if (aA.Theme=="Sovereign" or aa.Theme and aa.Theme.Name=="Sovereign") and not aA.Background then
-aA.Background="https://media0.giphy.com/media/96GnoTw2B0v00jYdat/giphy.gif"
-aA.BackgroundImageTransparency=aA.BackgroundImageTransparency or 0.15
+aA.Background="video:https://media0.giphy.com/media/96GnoTw2B0v00jYdat/giphy.mp4"
+aA.BackgroundImageTransparency=aA.BackgroundImageTransparency or 0
 end
 
 as.SetTheme(d)
