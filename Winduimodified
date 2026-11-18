@@ -37705,7 +37705,7 @@ Size=UDim2.new(
 0,
 aw.SideBarWidth,
 1,
-aw.User.Enabled and-aw.Topbar.Height-42-(aw.UIPadding*2)or-aw.Topbar.Height
+(aw.User and aw.User.Enabled)and-aw.Topbar.Height-42-(aw.UIPadding*2)or-aw.Topbar.Height
 ),
 Position=UDim2.new(0,0,0,aw.Topbar.Height),
 BackgroundTransparency=1,
