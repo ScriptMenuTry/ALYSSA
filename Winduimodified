@@ -37491,7 +37491,7 @@ Resizable=av.Resizable~=false,
 Background=av.Background,
 BackgroundImageTransparency=av.BackgroundImageTransparency or 0,
 ShadowTransparency=av.ShadowTransparency or 0.6,
-User=av.User and(function(u) if u.Enabled==nil then u.Enabled=true end return u end)(av.User) or{},
+User=av.User and(function(u) if u.Enabled==nil then u.Enabled=true end return u end)(av.User) or nil,
 Footer=av.Footer or{},
 Topbar=av.Topbar or{Height=52,ButtonsType="Default"},
 
@@ -37935,10 +37935,11 @@ f.UserIcon.Frame.DisplayName.Text=h and"Anonymous"or ak.LocalPlayer.DisplayName
 f.UserIcon.Frame.UserName.Text=h and"anonymous"or ak.LocalPlayer.Name
 end
 
+if aw.User then
 if aw.User.Enabled then
 aw.User:Enable()
-else
-aw.User:Disable()
+-- f is already Visible=true from construction; Enable tweens SideBarContainer
+end
 end
 
 -- Build the profile panel once, parented to the main window frame
@@ -38980,11 +38981,39 @@ end
 
 function aw.SetTitle(B,C)
 aw.Title=C
--- Fade out → swap text → fade in
-ap(z,0.12,{TextTransparency=1},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
-task.delay(0.13,function()
+-- Glitch-scramble: rapid random chars → snap to real title → slide in
+local _glitchChars="▓▒░█▄▀■□▪▫◆◇●○◉⚡⚔▸▾✦✧⟨⟩"
+local _len=math.max(#C,4)
+local _steps=8
+local _interval=0.045
+-- Briefly flash red
+ap(z,0.06,{TextTransparency=0.0},Enum.EasingStyle.Linear,Enum.EasingDirection.Out):Play()
+z.TextColor3=Color3.fromHex"#FF0040"
+-- Scramble loop
+local _done=false
+task.spawn(function()
+for _i=1,_steps do
+if _done then break end
+local _scrambled=""
+for _c=1,_len do
+local _r=math.random(1,#_glitchChars/3)*3-2
+_scrambled=_scrambled..(_glitchChars:sub(_r,_r+2) or "?")
+end
+z.Text=_scrambled:sub(1,_len)
+task.wait(_interval*(1+_i*0.15))
+end
+-- Final snap to real text with color restore
+_done=true
 z.Text=C
-ap(z,0.18,{TextTransparency=0},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
+-- Flash white then fade to theme color
+z.TextColor3=Color3.fromHex"#FFFFFF"
+ap(z,0.06,{TextTransparency=0.0},Enum.EasingStyle.Linear,Enum.EasingDirection.Out):Play()
+task.wait(0.07)
+-- Restore theme color
+z.TextColor3=Color3.fromHex"#FFAABB"
+-- Slide up from slight offset
+z.Position=UDim2.new(0,0,0,6)
+ap(z,0.22,{Position=UDim2.new(0,0,0,0)},Enum.EasingStyle.Back,Enum.EasingDirection.Out):Play()
 end)
 end
 
@@ -40382,7 +40411,7 @@ local d=aa.Themes[aA.Theme or"Dark"]
 
 if (aA.Theme=="Sovereign" or aa.Theme and aa.Theme.Name=="Sovereign") and not aA.Background then
 aA.Background="rbxassetid://119286400353668"
-aA.BackgroundImageTransparency=aA.BackgroundImageTransparency or 0.08
+aA.BackgroundImageTransparency=aA.BackgroundImageTransparency or 0.10
 end
 
 as.SetTheme(d)
