@@ -28780,7 +28780,7 @@ Font="rbxassetid://12187371840",
 
 Metadata={
 Description="⚔ Sovereign — enchanted volcanic throne. Blood, void, and forbidden fire.",
-BackgroundImage="rbxassetid://85980736451901",
+BackgroundImage="rbxassetid://119286400353668",
 },
 },
 }
@@ -38190,10 +38190,13 @@ _sectionLabel("ABOUT",9),
 _carlBadge,
 })
 
--- Main panel frame — covers the content (MainBar) area only
+-- Panel covers everything below the topbar in Main.Main
+-- Size: full width, full height minus topbar; starts below the frame
+local _topH=aw.Topbar and aw.Topbar.Height or 52
 _profilePanel=ao("Frame",{
-Size=UDim2.new(1,0,1,0),
-Position=UDim2.new(0,0,1.05,0), -- starts just below MainBar
+Size=UDim2.new(1,0,1,-_topH),
+Position=UDim2.new(0,0,1.05,0), -- starts off-screen below
+AnchorPoint=Vector2.new(0,0),
 BackgroundColor3=Color3.fromHex"#060002",
 BackgroundTransparency=0.0,
 ZIndex=100,
@@ -38255,11 +38258,16 @@ Rotation=270,
 }),
 })
 
--- Parent panel to MainBar so it only covers the content area, not the sidebar
-local _target=aw.UIElements.MainBar or (aw.UIElements.Main and aw.UIElements.Main.Main) or av.WindUI.ScreenGui.Window
-_profilePanel.Parent=_target
--- MainBar uses corner radius — clip children
-_profilePanel.ClipsDescendants=false
+-- Parent to Main.Main — the inner window frame, stable and full-size
+-- Position starts at topbar bottom so panel covers only content area
+local _winInner=aw.UIElements.Main and aw.UIElements.Main.Main
+if _winInner then
+_profilePanel.Position=UDim2.new(0,0,0,_topH) -- resting "open" position below topbar
+_profilePanel.Position=UDim2.new(0,0,1.05,0)   -- reset to off-screen for slide-in
+_profilePanel.Parent=_winInner
+else
+_profilePanel.Parent=av.WindUI.ScreenGui.Window
+end
 
 -- Close button click → slide panel back down
 an.AddSignal(_closeBtn.MouseButton1Click,function()
@@ -38284,11 +38292,11 @@ task.delay(0.32,function()
 if not _profileVisible then _profilePanel.Visible=false end
 end)
 else
--- slide up from bottom into content area
+-- slide up from bottom into content area (below topbar)
 _profileVisible=true
 _profilePanel.Position=UDim2.new(0,0,1.05,0)
 _profilePanel.Visible=true
-ap(_profilePanel,0.32,{Position=UDim2.new(0,0,0,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+ap(_profilePanel,0.32,{Position=UDim2.new(0,0,0,_topH)},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end
 end
 
@@ -38972,7 +38980,12 @@ end
 
 function aw.SetTitle(B,C)
 aw.Title=C
+-- Fade out → swap text → fade in
+ap(z,0.12,{TextTransparency=1},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
+task.delay(0.13,function()
 z.Text=C
+ap(z,0.18,{TextTransparency=0},Enum.EasingStyle.Quad,Enum.EasingDirection.Out):Play()
+end)
 end
 
 function aw.SetAuthor(B,C)
@@ -40368,7 +40381,7 @@ local b=true
 local d=aa.Themes[aA.Theme or"Dark"]
 
 if (aA.Theme=="Sovereign" or aa.Theme and aa.Theme.Name=="Sovereign") and not aA.Background then
-aA.Background="rbxassetid://85980736451901"
+aA.Background="rbxassetid://119286400353668"
 aA.BackgroundImageTransparency=aA.BackgroundImageTransparency or 0.08
 end
 
