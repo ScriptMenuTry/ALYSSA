@@ -571,7 +571,7 @@ function OrionLib:MakeWindow(WindowConfig)
 	end
 
 	local TabHolder = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 4), {
-		Size = UDim2.new(1, 0, 1, -50)
+		Size = UDim2.new(1, 0, 1, -58)
 	}), {
 		MakeElement("List"),
 		MakeElement("Padding", 8, 0, 0, 8)
@@ -628,16 +628,17 @@ function OrionLib:MakeWindow(WindowConfig)
 		}), "Stroke"), 
 		TabHolder,
 		SetChildren(SetProps(MakeElement("TFrame"), {
-			Size = UDim2.new(1, 0, 0, 50),
-			Position = UDim2.new(0, 0, 1, -50)
+			Size = UDim2.new(1, 0, 0, 58),
+			Position = UDim2.new(0, 0, 1, -58)
 		}), {
 			AddThemeObject(SetProps(MakeElement("Frame"), {
 				Size = UDim2.new(1, 0, 0, 1)
 			}), "Stroke"), 
+			-- Avatar circle (36×36, red ring)
 			AddThemeObject(SetChildren(SetProps(MakeElement("Frame"), {
 				AnchorPoint = Vector2.new(0, 0.5),
-				Size = UDim2.new(0, 32, 0, 32),
-				Position = UDim2.new(0, 10, 0.5, 0)
+				Size = UDim2.new(0, 36, 0, 36),
+				Position = UDim2.new(0, 8, 0.5, 0)
 			}), {
 				SetProps(MakeElement("Image", "https://www.roblox.com/headshot-thumbnail/image?userId=".. LocalPlayer.UserId .."&width=420&height=420&format=png"), {
 					Size = UDim2.new(1, 0, 1, 0)
@@ -647,25 +648,63 @@ function OrionLib:MakeWindow(WindowConfig)
 				}), "Second"),
 				MakeElement("Corner", 1)
 			}), "Divider"),
+			-- Red ring stroke around avatar
 			SetChildren(SetProps(MakeElement("TFrame"), {
 				AnchorPoint = Vector2.new(0, 0.5),
-				Size = UDim2.new(0, 32, 0, 32),
-				Position = UDim2.new(0, 10, 0.5, 0)
+				Size = UDim2.new(0, 36, 0, 36),
+				Position = UDim2.new(0, 8, 0.5, 0)
 			}), {
-				AddThemeObject(MakeElement("Stroke"), "Stroke"),
+				Create("UIStroke", { Color = Color3.fromRGB(180, 20, 20), Thickness = 1.5 }),
 				MakeElement("Corner", 1)
 			}),
-			AddThemeObject(SetProps(MakeElement("Label", LocalPlayer.DisplayName, WindowConfig.HidePremium and 14 or 13), {
-				Size = UDim2.new(1, -60, 0, 13),
-				Position = WindowConfig.HidePremium and UDim2.new(0, 50, 0, 19) or UDim2.new(0, 50, 0, 12),
+			-- Display name "Carl"
+			AddThemeObject(SetProps(MakeElement("Label", LocalPlayer.DisplayName, 13), {
+				Size = UDim2.new(1, -54, 0, 14),
+				Position = UDim2.new(0, 50, 0, 7),
 				Font = Enum.Font.GothamBold,
-				ClipsDescendants = true
+				FontFace = Font.new("rbxassetid://12187371840"),
+				ClipsDescendants = true,
+				Name = "ProfileName"
 			}), "Text"),
-			AddThemeObject(SetProps(MakeElement("Label", "", 12), {
-				Size = UDim2.new(1, -60, 0, 12),
-				Position = UDim2.new(0, 50, 1, -25),
-				Visible = not WindowConfig.HidePremium
-			}), "TextDark")
+			-- "Sovereign Team" role badge
+			Create("Frame", {
+				Size = UDim2.new(0, 90, 0, 14),
+				Position = UDim2.new(0, 50, 0, 23),
+				BackgroundColor3 = Color3.fromRGB(120, 10, 10),
+				BorderSizePixel = 0,
+			}, {
+				Create("UICorner", { CornerRadius = UDim.new(0, 4) }),
+				Create("UIStroke", { Color = Color3.fromRGB(200, 30, 30), Thickness = 1 }),
+				Create("TextLabel", {
+					Size = UDim2.new(1, 0, 1, 0),
+					BackgroundTransparency = 1,
+					Text = "✦ Sovereign Team",
+					TextColor3 = Color3.fromRGB(255, 180, 180),
+					TextSize = 9,
+					Font = Enum.Font.GothamBold,
+					FontFace = Font.new("rbxassetid://12187371840"),
+					TextXAlignment = Enum.TextXAlignment.Center,
+				}),
+			}),
+			-- "Acc Old" tag
+			Create("Frame", {
+				Size = UDim2.new(0, 54, 0, 12),
+				Position = UDim2.new(0, 50, 0, 39),
+				BackgroundColor3 = Color3.fromRGB(30, 10, 10),
+				BorderSizePixel = 0,
+			}, {
+				Create("UICorner", { CornerRadius = UDim.new(0, 3) }),
+				Create("UIStroke", { Color = Color3.fromRGB(100, 10, 10), Thickness = 1 }),
+				Create("TextLabel", {
+					Size = UDim2.new(1, 0, 1, 0),
+					BackgroundTransparency = 1,
+					Text = "Acc Old: " .. tostring(math.floor((os.time() - 1073520000) / 31536000)) .. "y",
+					TextColor3 = Color3.fromRGB(180, 80, 80),
+					TextSize = 8,
+					Font = Enum.Font.GothamSemibold,
+					TextXAlignment = Enum.TextXAlignment.Center,
+				}),
+			})
 		}),
 	}), "Second")
 
@@ -740,20 +779,6 @@ function OrionLib:MakeWindow(WindowConfig)
 			WindowName,
 			WindowTopBarLine,
 			RedAccentLine,
-			-- Search icon button (magnifier) left of the window controls
-			AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 7), {
-				Size = UDim2.new(0, 30, 0, 30),
-				Position = UDim2.new(1, -128, 0, 10),
-				Name = "SearchBtn"
-			}), {
-				AddThemeObject(MakeElement("Stroke"), "Stroke"),
-				SetProps(MakeElement("Image", "rbxassetid://3926305904"), {   -- magnifier icon
-					Size = UDim2.new(0, 16, 0, 16),
-					Position = UDim2.new(0.5, -8, 0.5, -8),
-					Name = "Ico"
-				}),
-				SetProps(MakeElement("Button"), { Size = UDim2.new(1,0,1,0), Name = "Click" })
-			}), "Second"),
 			AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 7), {
 				Size = UDim2.new(0, 70, 0, 30),
 				Position = UDim2.new(1, -90, 0, 10)
@@ -782,317 +807,97 @@ function OrionLib:MakeWindow(WindowConfig)
 
 	AddDraggingFunctionality(DragPoint, MainWindow)
 
-	-- ── Search Overlay ───────────────────────────────────────────────────
-	-- Sits over the content area (right of sidebar, below topbar)
-	local SearchOpen = false
+	-- ── TopBar Stats (Ping & FPS) ─────────────────────────────────────────
+	local StatsFrame = Create("Frame", {
+		Parent = MainWindow.TopBar,
+		Size = UDim2.new(0, 130, 0, 30),
+		Position = UDim2.new(1, -230, 0, 10),
+		BackgroundColor3 = Color3.fromRGB(14, 5, 5),
+		BorderSizePixel = 0,
+		ZIndex = 6,
+	}, {
+		Create("UICorner", { CornerRadius = UDim.new(0, 7) }),
+		Create("UIStroke", { Color = Color3.fromRGB(140, 15, 15), Thickness = 1 }),
+	})
 
-	local SearchOverlay = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 6), {
-		Parent      = MainWindow,
-		Position    = UDim2.new(0, SidebarW, 0, 50),
-		Size        = UDim2.new(1, -SidebarW, 1, -50),
-		Visible     = false,
-		ZIndex      = 8,
-		ClipsDescendants = true,
-		Name        = "SearchOverlay"
-	}), {
-		AddThemeObject(MakeElement("Stroke"), "Stroke"),
-	}), "Main")
-
-	-- Search bar row at the top of the overlay
-	local SearchBarFrame = AddThemeObject(SetChildren(SetProps(MakeElement("Frame"), {
-		Parent   = SearchOverlay,
-		Size     = UDim2.new(1, 0, 0, 36),
+	-- Ping label
+	local PingLabel = Create("TextLabel", {
+		Parent = StatsFrame,
+		Size = UDim2.new(0.5, -1, 1, 0),
 		Position = UDim2.new(0, 0, 0, 0),
-		ZIndex   = 9,
-	}), {
-		-- magnifier icon inside bar
-		SetProps(MakeElement("Image", "rbxassetid://3926305904"), {
-			Size     = UDim2.new(0, 14, 0, 14),
-			Position = UDim2.new(0, 10, 0.5, -7),
-			ZIndex   = 10,
-			Name     = "SearchIco"
-		}),
-		-- bottom divider
-		AddThemeObject(SetProps(MakeElement("Frame"), {
-			Size     = UDim2.new(1, 0, 0, 1),
-			Position = UDim2.new(0, 0, 1, -1),
-			ZIndex   = 9,
-		}), "Stroke"),
-	}), "Second")
-
-	local SearchBox = Create("TextBox", {
-		Parent               = SearchBarFrame,
-		Size                 = UDim2.new(1, -70, 1, 0),
-		Position             = UDim2.new(0, 32, 0, 0),
 		BackgroundTransparency = 1,
-		Text                 = "",
-		PlaceholderText      = "Search elements...",
-		TextColor3           = Color3.fromRGB(255, 210, 210),
-		PlaceholderColor3    = Color3.fromRGB(160, 60, 60),
-		TextSize             = 14,
-		Font                 = Enum.Font.GothamSemibold,
-		FontFace             = Font.new("rbxassetid://12187371840"),
-		ClearTextOnFocus     = false,
-		TextXAlignment       = Enum.TextXAlignment.Left,
-		ZIndex               = 10,
+		Text = "📶 ---ms",
+		TextColor3 = Color3.fromRGB(255, 210, 210),
+		TextSize = 11,
+		Font = Enum.Font.GothamBold,
+		FontFace = Font.new("rbxassetid://12187371840"),
+		TextXAlignment = Enum.TextXAlignment.Center,
+		ZIndex = 7,
 	})
 
-	-- "Clear" × button
-	local SearchClearBtn = Create("TextButton", {
-		Parent               = SearchBarFrame,
-		Size                 = UDim2.new(0, 28, 0, 28),
-		Position             = UDim2.new(1, -34, 0.5, -14),
-		BackgroundColor3     = Color3.fromRGB(180, 20, 20),
-		Text                 = "✕",
-		TextColor3           = Color3.fromRGB(255, 210, 210),
-		TextSize             = 12,
-		Font                 = Enum.Font.GothamBold,
-		BorderSizePixel      = 0,
-		ZIndex               = 10,
-	}, {
-		Create("UICorner", { CornerRadius = UDim.new(0, 6) })
+	-- Divider between ping and fps
+	Create("Frame", {
+		Parent = StatsFrame,
+		Size = UDim2.new(0, 1, 0.7, 0),
+		Position = UDim2.new(0.5, 0, 0.15, 0),
+		BackgroundColor3 = Color3.fromRGB(140, 15, 15),
+		BorderSizePixel = 0,
+		ZIndex = 7,
 	})
 
-	-- Scrolling results list
-	local SearchResultsScroll = Create("ScrollingFrame", {
-		Parent               = SearchOverlay,
-		Position             = UDim2.new(0, 0, 0, 36),
-		Size                 = UDim2.new(1, 0, 1, -36),
+	-- FPS label
+	local FPSLabel = Create("TextLabel", {
+		Parent = StatsFrame,
+		Size = UDim2.new(0.5, -1, 1, 0),
+		Position = UDim2.new(0.5, 1, 0, 0),
 		BackgroundTransparency = 1,
-		BorderSizePixel      = 0,
-		ScrollBarThickness   = 4,
-		ScrollBarImageColor3 = Color3.fromRGB(180, 20, 20),
-		CanvasSize           = UDim2.new(0, 0, 0, 0),
-		MidImage             = "rbxassetid://7445543667",
-		BottomImage          = "rbxassetid://7445543667",
-		TopImage             = "rbxassetid://7445543667",
-		ZIndex               = 9,
-	}, {
-		Create("UIListLayout", {
-			SortOrder = Enum.SortOrder.LayoutOrder,
-			Padding   = UDim.new(0, 2),
-		}),
-		Create("UIPadding", {
-			PaddingLeft   = UDim.new(0, 8),
-			PaddingRight  = UDim.new(0, 8),
-			PaddingTop    = UDim.new(0, 6),
-			PaddingBottom = UDim.new(0, 6),
-		}),
+		Text = "🎮 --fps",
+		TextColor3 = Color3.fromRGB(255, 210, 210),
+		TextSize = 11,
+		Font = Enum.Font.GothamBold,
+		FontFace = Font.new("rbxassetid://12187371840"),
+		TextXAlignment = Enum.TextXAlignment.Center,
+		ZIndex = 7,
 	})
 
-	-- Keep canvas height updated
-	local ResultsLayout = SearchResultsScroll:FindFirstChildOfClass("UIListLayout")
-	ResultsLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-		SearchResultsScroll.CanvasSize = UDim2.new(0, 0, 0, ResultsLayout.AbsoluteContentSize.Y + 12)
-	end)
-
-	-- Registry: tab metadata stored when each MakeTab call runs
-	-- Each entry: { tabFrame, container, name }
-	local TabRegistry = {}
-
-	-- Build a single result row
-	local function MakeResultRow(elementName, tabName, tabFrame, container, targetFrame)
-		local RowBtn = Create("TextButton", {
-			Size                 = UDim2.new(1, 0, 0, 40),
-			BackgroundColor3     = Color3.fromRGB(20, 8, 8),
-			Text                 = "",
-			BorderSizePixel      = 0,
-			AutoButtonColor      = false,
-			ZIndex               = 10,
-			Parent               = SearchResultsScroll,
-		}, {
-			Create("UICorner", { CornerRadius = UDim.new(0, 5) }),
-			Create("UIStroke",  { Color = Color3.fromRGB(100, 10, 10), Thickness = 1 }),
-			-- element name
-			Create("TextLabel", {
-				Size                 = UDim2.new(1, -12, 0, 20),
-				Position             = UDim2.new(0, 10, 0, 4),
-				BackgroundTransparency = 1,
-				Text                 = elementName,
-				TextColor3           = Color3.fromRGB(255, 210, 210),
-				TextSize             = 13,
-				Font                 = Enum.Font.GothamBold,
-				FontFace             = Font.new("rbxassetid://12187371840"),
-				TextXAlignment       = Enum.TextXAlignment.Left,
-				TextTruncate         = Enum.TextTruncate.AtEnd,
-				ZIndex               = 11,
-			}),
-			-- tab badge
-			Create("TextLabel", {
-				Size                 = UDim2.new(1, -12, 0, 14),
-				Position             = UDim2.new(0, 10, 0, 23),
-				BackgroundTransparency = 1,
-				Text                 = "→  " .. tabName,
-				TextColor3           = Color3.fromRGB(200, 80, 80),
-				TextSize             = 11,
-				Font                 = Enum.Font.GothamSemibold,
-				TextXAlignment       = Enum.TextXAlignment.Left,
-				TextTruncate         = Enum.TextTruncate.AtEnd,
-				ZIndex               = 11,
-			}),
-		})
-
-		-- Hover tint
-		RowBtn.MouseEnter:Connect(function()
-			TweenService:Create(RowBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(40, 10, 10)}):Play()
-		end)
-		RowBtn.MouseLeave:Connect(function()
-			TweenService:Create(RowBtn, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(20, 8, 8)}):Play()
-		end)
-
-		-- Click: switch to the right tab, close search, scroll to element
-		RowBtn.MouseButton1Click:Connect(function()
-			-- simulate clicking the tab
-			for _, Tab in next, TabHolder:GetChildren() do
-				if Tab:IsA("TextButton") then
-					Tab.Title.Font = Enum.Font.GothamSemibold
-					TweenService:Create(Tab.Ico,   TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = 0.4}):Play()
-					TweenService:Create(Tab.Title, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency  = 0.4}):Play()
-				end
+	-- Live update ping + fps
+	local fpsCount, fpsTimer = 0, 0
+	local lastFPS = 0
+	RunService.RenderStepped:Connect(function(dt)
+		fpsCount += 1
+		fpsTimer += dt
+		if fpsTimer >= 0.5 then
+			lastFPS = math.round(fpsCount / fpsTimer)
+			fpsCount = 0
+			fpsTimer = 0
+			local ping = math.round(game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue())
+			-- colour-code ping
+			local pingColor
+			if ping < 80 then
+				pingColor = Color3.fromRGB(80, 220, 80)
+			elseif ping < 150 then
+				pingColor = Color3.fromRGB(230, 200, 50)
+			else
+				pingColor = Color3.fromRGB(220, 60, 60)
 			end
-			for _, ItemContainer in next, MainWindow:GetChildren() do
-				if ItemContainer.Name == "ItemContainer" then
-					ItemContainer.Visible = false
-				end
+			-- colour-code fps
+			local fpsColor
+			if lastFPS >= 50 then
+				fpsColor = Color3.fromRGB(80, 220, 80)
+			elseif lastFPS >= 25 then
+				fpsColor = Color3.fromRGB(230, 200, 50)
+			else
+				fpsColor = Color3.fromRGB(220, 60, 60)
 			end
-			TweenService:Create(tabFrame.Ico,   TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
-			TweenService:Create(tabFrame.Title, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency  = 0}):Play()
-			tabFrame.Title.Font = Enum.Font.GothamBlack
-			container.Visible = true
-
-			-- Close search overlay
-			SearchOpen = false
-			TweenService:Create(SearchOverlay, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, -SidebarW, 0, 0)}):Play()
-			wait(0.21)
-			SearchOverlay.Visible = false
-			SearchBox.Text = ""
-
-			-- Scroll the container to the matched element and flash it red
-			if targetFrame and targetFrame.Parent then
-				local targetPos = targetFrame.AbsolutePosition.Y - container.AbsolutePosition.Y + container.CanvasPosition.Y
-				TweenService:Create(container, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {CanvasPosition = Vector2.new(0, math.max(0, targetPos - 20))}):Play()
-				-- flash highlight
-				local origColor = targetFrame.BackgroundColor3
-				TweenService:Create(targetFrame, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(180, 20, 20)}):Play()
-				wait(0.3)
-				TweenService:Create(targetFrame, TweenInfo.new(0.4), {BackgroundColor3 = origColor}):Play()
-			end
-		end)
-
-		return RowBtn
-	end
-
-	-- Populate results based on query
-	local function RunSearch(Query)
-		-- clear old results
-		for _, child in ipairs(SearchResultsScroll:GetChildren()) do
-			if child:IsA("TextButton") then child:Destroy() end
-		end
-
-		if Query == "" then
-			-- show placeholder message
-			Create("TextLabel", {
-				Parent               = SearchResultsScroll,
-				Size                 = UDim2.new(1, 0, 0, 40),
-				BackgroundTransparency = 1,
-				Text                 = "Start typing to search…",
-				TextColor3           = Color3.fromRGB(160, 60, 60),
-				TextSize             = 13,
-				Font                 = Enum.Font.GothamSemibold,
-				TextXAlignment       = Enum.TextXAlignment.Center,
-				ZIndex               = 10,
-			})
-			return
-		end
-
-		local lq = Query:lower()
-		local count = 0
-
-		for _, entry in ipairs(TabRegistry) do
-			for _, child in ipairs(entry.container:GetChildren()) do
-				-- each element frame has a "Content" or "Title" TextLabel
-				local nameLabel = child:FindFirstChild("Content") or child:FindFirstChild("Title")
-				if nameLabel and nameLabel:IsA("TextLabel") then
-					local labelText = nameLabel.Text or ""
-					if labelText:lower():find(lq, 1, true) then
-						MakeResultRow(labelText, entry.name, entry.tabFrame, entry.container, child)
-						count += 1
-					end
-				end
-			end
-		end
-
-		if count == 0 then
-			Create("TextLabel", {
-				Parent               = SearchResultsScroll,
-				Size                 = UDim2.new(1, 0, 0, 40),
-				BackgroundTransparency = 1,
-				Text                 = "No results for \"" .. Query .. "\"",
-				TextColor3           = Color3.fromRGB(160, 60, 60),
-				TextSize             = 13,
-				Font                 = Enum.Font.GothamSemibold,
-				TextXAlignment       = Enum.TextXAlignment.Center,
-				ZIndex               = 10,
-			})
-		end
-	end
-
-	-- Wire up the search box
-	SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
-		RunSearch(SearchBox.Text)
-	end)
-
-	SearchClearBtn.MouseButton1Click:Connect(function()
-		SearchBox.Text = ""
-		SearchBox:CaptureFocus()
-	end)
-
-	-- Toggle open/close
-	local function ToggleSearch()
-		SearchOpen = not SearchOpen
-		if SearchOpen then
-			SearchOverlay.Size    = UDim2.new(1, -SidebarW, 0, 0)
-			SearchOverlay.Visible = true
-			RunSearch("")
-			TweenService:Create(SearchOverlay, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-				Size = UDim2.new(1, -SidebarW, 1, -50)
-			}):Play()
-			wait(0.1)
-			SearchBox:CaptureFocus()
-		else
-			TweenService:Create(SearchOverlay, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-				Size = UDim2.new(1, -SidebarW, 0, 0)
-			}):Play()
-			wait(0.21)
-			SearchOverlay.Visible = false
-			SearchBox.Text = ""
-		end
-	end
-
-	-- Hook the search button
-	local SearchBtnClick = MainWindow.TopBar.SearchBtn.Click
-	SearchBtnClick.MouseButton1Click:Connect(ToggleSearch)
-	-- Touch devices: also wire TouchTap
-	SearchBtnClick.TouchTap:Connect(ToggleSearch)
-
-	-- Ctrl+F / keyboard shortcut to open search (desktop)
-	AddConnection(UserInputService.InputBegan, function(Input, Processed)
-		if not Processed and Input.KeyCode == Enum.KeyCode.F
-			and UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
-			ToggleSearch()
+			PingLabel.Text = "📶 " .. tostring(ping) .. "ms"
+			PingLabel.TextColor3 = pingColor
+			FPSLabel.Text  = "🎮 " .. tostring(lastFPS) .. "fps"
+			FPSLabel.TextColor3 = fpsColor
 		end
 	end)
-
-	-- Escape closes search
-	AddConnection(UserInputService.InputBegan, function(Input, Processed)
-		if not Processed and Input.KeyCode == Enum.KeyCode.Escape and SearchOpen then
-			ToggleSearch()
-		end
-	end)
-
-	-- Store TabRegistry reference so MakeTab can register itself (closure)
-	-- We patch MakeTab after this block; TabRegistry is upvalue-shared.
 	-- ─────────────────────────────────────────────────────────────────────
+
+	-- (search overlay removed)
 
 	-- Floating mobile reopen button (visible only on touch devices when UI is hidden)
 	local MobileReopenBtn = Create("TextButton", {
@@ -1250,13 +1055,6 @@ function OrionLib:MakeWindow(WindowConfig)
 		AddConnection(Container.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
 			Container.CanvasSize = UDim2.new(0, 0, 0, Container.UIListLayout.AbsoluteContentSize.Y + 30)
 		end)
-
-		-- Register tab for search
-		table.insert(TabRegistry, {
-			name     = TabConfig.Name,
-			tabFrame = TabFrame,
-			container = Container
-		})
 
 		if FirstTab then
 			FirstTab = false
