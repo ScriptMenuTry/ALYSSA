@@ -37491,7 +37491,7 @@ Resizable=av.Resizable~=false,
 Background=av.Background,
 BackgroundImageTransparency=av.BackgroundImageTransparency or 0,
 ShadowTransparency=av.ShadowTransparency or 0.6,
-User=av.User and(function(u) if u.Enabled==nil then u.Enabled=true end return u end)(av.User) or nil,
+User=av.User or nil,
 Footer=av.Footer or{},
 Topbar=av.Topbar or{Height=52,ButtonsType="Default"},
 
@@ -40383,6 +40383,14 @@ aa:SetTheme"Sovereign"
 aa:SetLanguage(as.Language)
 
 function aa.CreateWindow(az,aA)
+-- Normalize User: nil if not provided or empty, Enabled=true by default when provided
+if aA.User~=nil then
+if type(aA.User)~="table"or next(aA.User)==nil then
+aA.User=nil
+else
+if aA.User.Enabled==nil then aA.User.Enabled=true end
+end
+end
 local aB=a.load'ak'
 
 if not am:IsStudio()and writefile then
