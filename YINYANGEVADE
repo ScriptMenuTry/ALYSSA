@@ -1,4 +1,4 @@
-local HYDRA_URL = ""
+local HYDRA_URL = "https://raw.githubusercontent.com/ScriptMenuTry/ALYSSA/refs/heads/main/HydraUiModified"
 
 local Hydra = loadstring(game:HttpGet(HYDRA_URL))()
 
