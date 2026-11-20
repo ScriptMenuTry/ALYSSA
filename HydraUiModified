@@ -34,7 +34,7 @@ pcall(function()
     local genv = (type(getgenv) == "function" and getgenv()) or _G
     if type(genv.HydraSettings) == "table" then Settings = genv.HydraSettings end
 end)
-local TITLE = tostring(Settings.Name or "Hydra")
+local TITLE = tostring(Settings.Name or "Hydra ( Keyless )")
 local INITIAL = string.upper(TITLE:match("^[\1-\127\194-\244][\128-\191]*") or "H")
 
 -- ==================== CONFIGURACION (se guarda en el executor) ====================
