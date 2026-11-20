@@ -28308,108 +28308,105 @@ ElementBackgroundTransparency=0,
 YinYang={
 Name="YinYang",
 
--- Accent: blazing crimson-red gradient — the yang fire
+-- ☯ Accent: diagonal black-to-white — the yin yang split
 Accent=aa:Gradient({
-["0"]={Color=Color3.fromHex"#FF0000",Transparency=0},
-["50"]={Color=Color3.fromHex"#CC0000",Transparency=0},
-["100"]={Color=Color3.fromHex"#8B0000",Transparency=0},
+["0"]={Color=Color3.fromHex"#000000",Transparency=0},
+["45"]={Color=Color3.fromHex"#444444",Transparency=0},
+["55"]={Color=Color3.fromHex"#BBBBBB",Transparency=0},
+["100"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
 },{Rotation=135}),
 
--- Dialog: deep matte black with a blood-red edge
-Dialog=aa:Gradient({
-["0"]={Color=Color3.fromHex"#0A0000",Transparency=0},
-["60"]={Color=Color3.fromHex"#140000",Transparency=0},
-["100"]={Color=Color3.fromHex"#1F0000",Transparency=0},
-},{Rotation=90}),
+-- Dialog: deep black (yin side)
+Dialog=Color3.fromHex"#111111",
 
--- Outline: vivid red to pure white — yin/yang duality
+-- Outline: pure white — crisp contrast ring
 Outline=aa:Gradient({
-["0"]={Color=Color3.fromHex"#FF0000",Transparency=0},
-["50"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
-["100"]={Color=Color3.fromHex"#FF0000",Transparency=0},
-},{Rotation=45}),
+["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["50"]={Color=Color3.fromHex"#888888",Transparency=0},
+["100"]={Color=Color3.fromHex"#000000",Transparency=0},
+},{Rotation=135}),
 
--- Text: pure white — clean contrast on black
+-- Text: white on black background
 Text=Color3.fromHex"#FFFFFF",
 
--- Placeholder: soft gray-red
-Placeholder=Color3.fromHex"#993333",
+-- Placeholder: soft mid-grey
+Placeholder=Color3.fromHex"#888888",
 
--- Background: pure black — the yin void
+-- Background: absolute black (yin void)
 Background=Color3.fromHex"#000000",
 
--- Button: bold red-to-black gradient
+-- Button: white (yang — the light dot inside the dark)
 Button=aa:Gradient({
-["0"]={Color=Color3.fromHex"#FF0000",Transparency=0},
-["100"]={Color=Color3.fromHex"#5C0000",Transparency=0},
-},{Rotation=90}),
+["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["100"]={Color=Color3.fromHex"#CCCCCC",Transparency=0},
+},{Rotation=135}),
 
--- Icon: bright red
-Icon=Color3.fromHex"#FF2222",
+-- Icon: bright white
+Icon=Color3.fromHex"#FFFFFF",
 
--- Toggle: vivid red knob
-Toggle=Color3.fromHex"#FF0000",
+-- Toggle: white knob — yang light on yin dark bar
+Toggle=Color3.fromHex"#FFFFFF",
 
--- ToggleBar: dark red bar background
+-- ToggleBar: dark charcoal bar
 ToggleBar=aa:Gradient({
-["0"]={Color=Color3.fromHex"#1A0000",Transparency=0},
-["100"]={Color=Color3.fromHex"#2D0000",Transparency=0},
+["0"]={Color=Color3.fromHex"#1A1A1A",Transparency=0},
+["100"]={Color=Color3.fromHex"#2E2E2E",Transparency=0},
 },{Rotation=90}),
 
--- Slider: crimson fill
-Slider=Color3.fromHex"#FF0000",
+-- Slider: white fill
+Slider=Color3.fromHex"#FFFFFF",
 
--- Checkbox: red box
-Checkbox=Color3.fromHex"#FF0000",
+-- Checkbox: white box
+Checkbox=Color3.fromHex"#FFFFFF",
 
--- CheckboxBorder: white glow
-CheckboxBorder=Color3.fromHex"#FFFFFF",
-CheckboxBorderTransparency=0.7,
+-- CheckboxBorder: subtle grey glow
+CheckboxBorder=Color3.fromHex"#AAAAAA",
+CheckboxBorderTransparency=0.5,
 
--- Panel: near-black with red tint
-PanelBackground=Color3.fromHex"#0A0000",
-PanelBackgroundTransparency=0.6,
+-- Panel: very dark near-black glass
+PanelBackground=Color3.fromHex"#111111",
+PanelBackgroundTransparency=0.75,
 
--- Label background
+-- Label: dark glass
 LabelBackground=Color3.fromHex"#000000",
-LabelBackgroundTransparency=0.5,
+LabelBackgroundTransparency=0.6,
 
--- SliderIcon: red pill
-SliderIcon=Color3.fromHex"#FF0000",
+-- SliderIcon: white pill
+SliderIcon=Color3.fromHex"#FFFFFF",
 
--- Primary: vivid red
-Primary=Color3.fromHex"#FF0000",
+-- Primary: white
+Primary=Color3.fromHex"#FFFFFF",
 
--- Element cards: very dark charcoal with red warmth
-ElementBackground=Color3.fromHex"#111111",
+-- Element cards: very dark charcoal — the yin field
+ElementBackground=Color3.fromHex"#1A1A1A",
 ElementBackgroundTransparency=0,
 
--- Topbar title: white
+-- Topbar: white title on black bar
 WindowTopbarTitle=Color3.fromHex"#FFFFFF",
 
--- Shadow: deep blood-black
-WindowShadow=Color3.fromHex"#1A0000",
+-- Shadow: soft grey-black
+WindowShadow=Color3.fromHex"#000000",
 
--- Scrollbar: red rail on black track
-ScrollBar=Color3.fromHex"#CC0000",
-ScrollBarBackground=Color3.fromHex"#1A0000",
+-- Scrollbar: white bar on dark track
+ScrollBar=Color3.fromHex"#FFFFFF",
+ScrollBarBackground=Color3.fromHex"#1A1A1A",
 
--- Tab colours
-TabBackground=Color3.fromHex"#0D0000",
-TabBackgroundHover=Color3.fromHex"#1A0000",
+-- Tab colours — yin dark base, yang white active
+TabBackground=Color3.fromHex"#0A0A0A",
+TabBackgroundHover=Color3.fromHex"#1A1A1A",
 TabBackgroundHoverTransparency=0,
-TabBackgroundActive=Color3.fromHex"#2B0000",
+TabBackgroundActive=Color3.fromHex"#2A2A2A",
 TabBackgroundActiveTransparency=0,
 
 -- Dropdown
-DropdownBackground=Color3.fromHex"#0A0000",
-DropdownTabBackground=Color3.fromHex"#1A0000",
+DropdownBackground=Color3.fromHex"#111111",
+DropdownTabBackground=Color3.fromHex"#1C1C1C",
 
--- ProgressBar
-ProgressBar=Color3.fromHex"#FF0000",
+-- ProgressBar: white fill
+ProgressBar=Color3.fromHex"#FFFFFF",
 
 Metadata={
-Description="☯ YinYang — blood red & absolute black. Fire and void.",
+Description="☯ YinYang — pure black & white. Dark as night, bright as day.",
 },
 },
 
