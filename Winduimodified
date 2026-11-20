@@ -40142,7 +40142,7 @@ aa.Themes=a.load'B'(aa,as)
 
 as.Themes=aa.Themes
 
-aa:SetTheme"Sovereign"
+aa:SetTheme"YinYang"
 aa:SetLanguage(as.Language)
 
 function aa.CreateWindow(az,aA)
@@ -40178,7 +40178,7 @@ end
 
 local b=true
 
-local d=aa.Themes[aA.Theme or"Dark"]
+local d=aa.Themes[aA.Theme or"YinYang"]
 
 -- Background image removed
 
