@@ -28308,69 +28308,108 @@ ElementBackgroundTransparency=0,
 YinYang={
 Name="YinYang",
 
--- Pure white accent for the light half
-Accent=Color3.fromHex"#FFFFFF",
+-- Accent: blazing crimson-red gradient — the yang fire
+Accent=aa:Gradient({
+["0"]={Color=Color3.fromHex"#FF0000",Transparency=0},
+["50"]={Color=Color3.fromHex"#CC0000",Transparency=0},
+["100"]={Color=Color3.fromHex"#8B0000",Transparency=0},
+},{Rotation=135}),
 
--- Dialog: clean off-white panel
-Dialog=Color3.fromHex"#F5F5F5",
+-- Dialog: deep matte black with a blood-red edge
+Dialog=aa:Gradient({
+["0"]={Color=Color3.fromHex"#0A0000",Transparency=0},
+["60"]={Color=Color3.fromHex"#140000",Transparency=0},
+["100"]={Color=Color3.fromHex"#1F0000",Transparency=0},
+},{Rotation=90}),
 
--- Outline: sharp black border
-Outline=Color3.fromHex"#000000",
+-- Outline: vivid red to pure white — yin/yang duality
+Outline=aa:Gradient({
+["0"]={Color=Color3.fromHex"#FF0000",Transparency=0},
+["50"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF0000",Transparency=0},
+},{Rotation=45}),
 
--- Text: deep black on white backgrounds
-Text=Color3.fromHex"#000000",
+-- Text: pure white — clean contrast on black
+Text=Color3.fromHex"#FFFFFF",
 
--- Placeholder: mid-gray
-Placeholder=Color3.fromHex"#888888",
+-- Placeholder: soft gray-red
+Placeholder=Color3.fromHex"#993333",
 
--- Background: pure white
-Background=Color3.fromHex"#FFFFFF",
+-- Background: pure black — the yin void
+Background=Color3.fromHex"#000000",
 
--- Button: solid black
-Button=Color3.fromHex"#000000",
+-- Button: bold red-to-black gradient
+Button=aa:Gradient({
+["0"]={Color=Color3.fromHex"#FF0000",Transparency=0},
+["100"]={Color=Color3.fromHex"#5C0000",Transparency=0},
+},{Rotation=90}),
 
--- Icon: dark charcoal
-Icon=Color3.fromHex"#1A1A1A",
+-- Icon: bright red
+Icon=Color3.fromHex"#FF2222",
 
--- Toggle: black knob on white bar
-Toggle=Color3.fromHex"#000000",
+-- Toggle: vivid red knob
+Toggle=Color3.fromHex"#FF0000",
 
--- Slider: black track
-Slider=Color3.fromHex"#000000",
+-- ToggleBar: dark red bar background
+ToggleBar=aa:Gradient({
+["0"]={Color=Color3.fromHex"#1A0000",Transparency=0},
+["100"]={Color=Color3.fromHex"#2D0000",Transparency=0},
+},{Rotation=90}),
 
--- Checkbox: black tick box
-Checkbox=Color3.fromHex"#000000",
+-- Slider: crimson fill
+Slider=Color3.fromHex"#FF0000",
 
--- Panel: lightly frosted white glass
-PanelBackground=Color3.fromHex"#FFFFFF",
-PanelBackgroundTransparency=0.88,
+-- Checkbox: red box
+Checkbox=Color3.fromHex"#FF0000",
 
--- Label: very light translucent white
-LabelBackground=Color3.fromHex"#FFFFFF",
-LabelBackgroundTransparency=0.80,
+-- CheckboxBorder: white glow
+CheckboxBorder=Color3.fromHex"#FFFFFF",
+CheckboxBorderTransparency=0.7,
 
--- Slider knob: pure black
-SliderIcon=Color3.fromHex"#000000",
+-- Panel: near-black with red tint
+PanelBackground=Color3.fromHex"#0A0000",
+PanelBackgroundTransparency=0.6,
 
--- Primary action: black
-Primary=Color3.fromHex"#000000",
+-- Label background
+LabelBackground=Color3.fromHex"#000000",
+LabelBackgroundTransparency=0.5,
 
--- Element cards: soft light gray
-ElementBackground=Color3.fromHex"#ECECEC",
+-- SliderIcon: red pill
+SliderIcon=Color3.fromHex"#FF0000",
+
+-- Primary: vivid red
+Primary=Color3.fromHex"#FF0000",
+
+-- Element cards: very dark charcoal with red warmth
+ElementBackground=Color3.fromHex"#111111",
 ElementBackgroundTransparency=0,
 
--- Topbar title: solid black
-WindowTopbarTitle=Color3.fromHex"#000000",
+-- Topbar title: white
+WindowTopbarTitle=Color3.fromHex"#FFFFFF",
 
--- Shadow: soft near-black
-WindowShadow=Color3.fromHex"#111111",
+-- Shadow: deep blood-black
+WindowShadow=Color3.fromHex"#1A0000",
 
--- Scrollbar: dark gray rail on white
-ScrollBar=Color3.fromHex"#333333",
-ScrollBarBackground=Color3.fromHex"#E0E0E0",
+-- Scrollbar: red rail on black track
+ScrollBar=Color3.fromHex"#CC0000",
+ScrollBarBackground=Color3.fromHex"#1A0000",
+
+-- Tab colours
+TabBackground=Color3.fromHex"#0D0000",
+TabBackgroundHover=Color3.fromHex"#1A0000",
+TabBackgroundHoverTransparency=0,
+TabBackgroundActive=Color3.fromHex"#2B0000",
+TabBackgroundActiveTransparency=0,
+
+-- Dropdown
+DropdownBackground=Color3.fromHex"#0A0000",
+DropdownTabBackground=Color3.fromHex"#1A0000",
+
+-- ProgressBar
+ProgressBar=Color3.fromHex"#FF0000",
 
 Metadata={
-Description="YinYang - pure black & white. Balance, contrast, clarity.",
+Description="☯ YinYang — blood red & absolute black. Fire and void.",
 },
 },
 
@@ -28501,7 +28540,6 @@ Font="rbxassetid://12187371840",
 
 Metadata={
 Description="⚔ Sovereign — enchanted volcanic throne. Blood, void, and forbidden fire.",
-BackgroundImage="rbxassetid://119286400353668",
 },
 },
 }
@@ -30966,6 +31004,13 @@ end
 function am.Animate(aw,ax,ay)
 if not al.Window.IsToggleDragging then
 al.Window.IsToggleDragging=true
+-- Safety: always reset stuck drag state after a short delay
+task.delay(5,function()
+if al.Window.IsToggleDragging then
+al.Window.IsToggleDragging=false
+al.WindUI.CurrentInput=nil
+end
+end)
 
 local az=ax.Position.X
 local aA=ax.Position.Y
@@ -31591,7 +31636,7 @@ local d=math.clamp(
 0,
 1
 )
-aA=CalculateValue(al.Value.Min+d*(al.Value.Max-al.Value.Min))
+aA=CalculateValue((al.Value.Min or 0)+d*((al.Value.Max or 100)-(al.Value.Min or 0)))
 aA=math.clamp(aA,al.Value.Min or 0,al.Value.Max or 100)
 
 if aA~=aq then
@@ -31613,7 +31658,7 @@ local g=math.clamp(
 0,
 1
 )
-aA=CalculateValue(al.Value.Min+g*(al.Value.Max-al.Value.Min))
+aA=CalculateValue((al.Value.Min or 0)+g*((al.Value.Max or 100)-(al.Value.Min or 0)))
 
 if aA~=aq then
 ag(al.UIElements.SliderIcon.Frame,0.05,{Size=UDim2.new(g,0,1,0)}):Play()
@@ -31666,7 +31711,7 @@ local b=math.clamp(
 0,
 1
 )
-aA=CalculateValue(al.Value.Min+b*(al.Value.Max-al.Value.Min))
+aA=CalculateValue((al.Value.Min or 0)+b*((al.Value.Max or 100)-(al.Value.Min or 0)))
 
 if aA~=aq then
 ag(al.UIElements.SliderIcon.Frame,0.05,{Size=UDim2.new(b,0,1,0)}):Play()
@@ -40138,10 +40183,7 @@ local b=true
 
 local d=aa.Themes[aA.Theme or"Dark"]
 
-if (aA.Theme=="Sovereign" or aa.Theme and aa.Theme.Name=="Sovereign") and not aA.Background then
-aA.Background="rbxassetid://119286400353668"
-aA.BackgroundImageTransparency=aA.BackgroundImageTransparency or 0.10
-end
+-- Background image removed
 
 as.SetTheme(d)
 
