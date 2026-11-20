@@ -28407,6 +28407,7 @@ ProgressBar=Color3.fromHex"#FFFFFF",
 
 Metadata={
 Description="☯ YinYang — pure black & white. Dark as night, bright as day.",
+BackgroundImage="rbxassetid://134013840284284",
 },
 },
 
@@ -40180,7 +40181,14 @@ local b=true
 
 local d=aa.Themes[aA.Theme or"YinYang"]
 
--- Background image removed
+-- Auto-apply background for YinYang theme
+if (aA.Theme=="YinYang" or aa.Theme and aa.Theme.Name=="YinYang") and not aA.Background then
+local _yy=aa.Themes["YinYang"]
+if _yy and _yy.Metadata and _yy.Metadata.BackgroundImage then
+aA.Background=_yy.Metadata.BackgroundImage
+aA.BackgroundImageTransparency=aA.BackgroundImageTransparency or 0.05
+end
+end
 
 as.SetTheme(d)
 
