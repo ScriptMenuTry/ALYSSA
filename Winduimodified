@@ -24760,10 +24760,12 @@ TabBackgroundHoverTransparency=0.97,
 TabBackgroundActive="Hover",
 TabBackgroundActiveTransparency=0.93,
 TabText="Text",
+TabTextActive="Text",
 TabTextTransparency=0.3,
 TabTextTransparencyActive=0,
 TabTitle="Text",
 TabIcon="Icon",
+TabIconActive="Icon",
 TabIconTransparency=0.4,
 TabIconTransparencyActive=0.1,
 TabBorderTransparency=1,
@@ -28308,7 +28310,7 @@ ElementBackgroundTransparency=0,
 YinYang={
 Name="YinYang",
 
--- ☯ Minecraft pixel font — blocky enchanted lettering
+-- ☯ Minecraft pixel font
 Font="rbxassetid://12187371840",
 
 -- Accent: yin-yang diagonal split
@@ -28322,14 +28324,14 @@ Accent=aa:Gradient({
 -- Dialog: deep matte black
 Dialog=Color3.fromHex"#0D0D0D",
 
--- Outline: soft white → dark diagonal
+-- Outline: white → dark diagonal
 Outline=aa:Gradient({
 ["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
 ["50"]={Color=Color3.fromHex"#777777",Transparency=0},
 ["100"]={Color=Color3.fromHex"#111111",Transparency=0},
 },{Rotation=135}),
 
--- Text: crisp white
+-- Text: crisp white (body text on black backgrounds)
 Text=Color3.fromHex"#FFFFFF",
 
 -- Placeholder: soft grey
@@ -28349,97 +28351,93 @@ Icon=Color3.fromHex"#E8E8E8",
 
 -- Toggle: white knob on black bar
 Toggle=Color3.fromHex"#FFFFFF",
-
--- ToggleBar: dark glass bar
 ToggleBar=aa:Gradient({
 ["0"]={Color=Color3.fromHex"#111111",Transparency=0},
 ["100"]={Color=Color3.fromHex"#222222",Transparency=0},
 },{Rotation=90}),
 
--- Slider: soft white fill
+-- Slider
 Slider=Color3.fromHex"#DDDDDD",
-
--- Checkbox: white box
 Checkbox=Color3.fromHex"#FFFFFF",
-
--- CheckboxBorder: subtle grey
 CheckboxBorder=Color3.fromHex"#999999",
 CheckboxBorderTransparency=0.5,
 
--- Panel: frosted dark glass
+-- Panel / Label
 PanelBackground=Color3.fromHex"#0A0A0A",
 PanelBackgroundTransparency=0.7,
-
--- Label: dark glass label
 LabelBackground=Color3.fromHex"#000000",
 LabelBackgroundTransparency=0.55,
-
--- SliderIcon: white pill
 SliderIcon=Color3.fromHex"#FFFFFF",
-
--- Primary: white
 Primary=Color3.fromHex"#FFFFFF",
 
--- Element cards: very dark charcoal
+-- Element cards: dark charcoal
 ElementBackground=Color3.fromHex"#141414",
 ElementBackgroundTransparency=0,
 
--- Topbar title: dark-to-light diagonal — ☯ balanced
+-- ☯ Window title: dark-to-light diagonal — the yin yang line
 WindowTopbarTitle=aa:Gradient({
 ["0"]={Color=Color3.fromHex"#000000",Transparency=0},
 ["30"]={Color=Color3.fromHex"#444444",Transparency=0},
-["60"]={Color=Color3.fromHex"#AAAAAA",Transparency=0},
+["65"]={Color=Color3.fromHex"#AAAAAA",Transparency=0},
 ["100"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
 },{Rotation=135}),
 
--- Shadow: soft black
 WindowShadow=Color3.fromHex"#000000",
-
--- Scrollbar: soft white on dark track
 ScrollBar=Color3.fromHex"#DDDDDD",
 ScrollBarBackground=Color3.fromHex"#111111",
 
--- ☯ Tabs: True Dark & Light gradient
--- Tab text: deep dark → pure light diagonal — yin left, yang right
+-- ☯ Tab INACTIVE text: white → light grey (visible on dark tab background)
 TabText=aa:Gradient({
-["0"]={Color=Color3.fromHex"#111111",Transparency=0},
-["35"]={Color=Color3.fromHex"#555555",Transparency=0},
-["65"]={Color=Color3.fromHex"#BBBBBB",Transparency=0},
-["100"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["50"]={Color=Color3.fromHex"#CCCCCC",Transparency=0},
+["100"]={Color=Color3.fromHex"#AAAAAA",Transparency=0},
 },{Rotation=135}),
 TabTextTransparency=0.35,
 TabTextTransparencyActive=0,
 
--- Tab icon: same dark → light diagonal as text
+-- ☯ Tab ACTIVE text: deep black → dark grey (visible on white active tab background)
+TabTextActive=aa:Gradient({
+["0"]={Color=Color3.fromHex"#000000",Transparency=0},
+["40"]={Color=Color3.fromHex"#222222",Transparency=0},
+["70"]={Color=Color3.fromHex"#555555",Transparency=0},
+["100"]={Color=Color3.fromHex"#111111",Transparency=0},
+},{Rotation=135}),
+
+-- ☯ Tab INACTIVE icon: white gradient (on dark bg)
 TabIcon=aa:Gradient({
-["0"]={Color=Color3.fromHex"#111111",Transparency=0},
-["35"]={Color=Color3.fromHex"#555555",Transparency=0},
-["65"]={Color=Color3.fromHex"#CCCCCC",Transparency=0},
-["100"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["50"]={Color=Color3.fromHex"#CCCCCC",Transparency=0},
+["100"]={Color=Color3.fromHex"#AAAAAA",Transparency=0},
 },{Rotation=135}),
 TabIconTransparency=0.4,
 TabIconTransparencyActive=0,
 
--- Tab section title: bold dark-to-light sweep
+-- ☯ Tab ACTIVE icon: dark gradient (on white bg)
+TabIconActive=aa:Gradient({
+["0"]={Color=Color3.fromHex"#000000",Transparency=0},
+["50"]={Color=Color3.fromHex"#222222",Transparency=0},
+["100"]={Color=Color3.fromHex"#111111",Transparency=0},
+},{Rotation=135}),
+
+-- ☯ Tab section title: dark-to-light sweep
 TabTitle=aa:Gradient({
 ["0"]={Color=Color3.fromHex"#000000",Transparency=0},
-["40"]={Color=Color3.fromHex"#666666",Transparency=0},
+["35"]={Color=Color3.fromHex"#555555",Transparency=0},
 ["70"]={Color=Color3.fromHex"#CCCCCC",Transparency=0},
 ["100"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
 },{Rotation=135}),
 
--- Tab backgrounds: yin dark void → yang light glow
+-- Tab backgrounds: yin dark void → yang soft white active
 TabBackground=Color3.fromHex"#080808",
 TabBackgroundHover=Color3.fromHex"#141414",
 TabBackgroundHoverTransparency=0,
 TabBackgroundActive=aa:Gradient({
 ["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
-["50"]={Color=Color3.fromHex"#E8E8E8",Transparency=0},
-["100"]={Color=Color3.fromHex"#D0D0D0",Transparency=0},
+["50"]={Color=Color3.fromHex"#F0F0F0",Transparency=0},
+["100"]={Color=Color3.fromHex"#E0E0E0",Transparency=0},
 },{Rotation=135}),
 TabBackgroundActiveTransparency=0,
 
--- Tab border: soft white glow on active
 TabBorder=aa:Gradient({
 ["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
 ["100"]={Color=Color3.fromHex"#AAAAAA",Transparency=0},
@@ -28450,8 +28448,6 @@ TabBorderTransparencyActive=0.55,
 -- Dropdown
 DropdownBackground=Color3.fromHex"#0D0D0D",
 DropdownTabBackground=Color3.fromHex"#1A1A1A",
-
--- ProgressBar: soft white fill
 ProgressBar=Color3.fromHex"#DDDDDD",
 
 Metadata={
@@ -32852,8 +32848,8 @@ Text=ay.Name,
 TextXAlignment="Left",
 FontFace=Font.new(ak.Font,Enum.FontWeight.Medium),
 ThemeTag={
-TextColor3="Text",
-BackgroundColor3="Text",
+TextColor3="TabText",
+BackgroundColor3="TabText",
 },
 TextSize=15,
 BackgroundTransparency=1,
@@ -36485,10 +36481,12 @@ ImageTransparency="TabBorderTransparency",
 },0.15)
 end
 ak.SetThemeTag(as.UIElements.Main.Frame.TextLabel,{
+TextColor3="TabText",
 TextTransparency="TabTextTransparency",
 },0.15)
 if as.UIElements.Icon and not as.IconColor then
 ak.SetThemeTag(as.UIElements.Icon.ImageLabel,{
+ImageColor3="TabIcon",
 ImageTransparency="TabIconTransparency",
 },0.15)
 end
@@ -36505,10 +36503,12 @@ ImageTransparency="TabBorderTransparencyActive",
 },0.15)
 end
 ak.SetThemeTag(ao.Tabs[aq].UIElements.Main.Frame.TextLabel,{
+TextColor3="TabTextActive",
 TextTransparency="TabTextTransparencyActive",
 },0.15)
 if ao.Tabs[aq].UIElements.Icon and not ao.Tabs[aq].IconColor then
 ak.SetThemeTag(ao.Tabs[aq].UIElements.Icon.ImageLabel,{
+ImageColor3="TabIconActive",
 ImageTransparency="TabIconTransparencyActive",
 },0.15)
 end
