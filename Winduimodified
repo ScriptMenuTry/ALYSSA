@@ -28311,7 +28311,7 @@ Name="YinYang",
 -- ☯ Minecraft pixel font — blocky enchanted lettering
 Font="rbxassetid://12187371840",
 
--- Accent: diagonal yin-yang split gradient
+-- Accent: yin-yang diagonal split
 Accent=aa:Gradient({
 ["0"]={Color=Color3.fromHex"#000000",Transparency=0},
 ["45"]={Color=Color3.fromHex"#333333",Transparency=0},
@@ -28322,7 +28322,7 @@ Accent=aa:Gradient({
 -- Dialog: deep matte black
 Dialog=Color3.fromHex"#0D0D0D",
 
--- Outline: soft white glow ring
+-- Outline: soft white → dark diagonal
 Outline=aa:Gradient({
 ["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
 ["50"]={Color=Color3.fromHex"#777777",Transparency=0},
@@ -28384,8 +28384,13 @@ Primary=Color3.fromHex"#FFFFFF",
 ElementBackground=Color3.fromHex"#141414",
 ElementBackgroundTransparency=0,
 
--- Topbar title: pure white
-WindowTopbarTitle=Color3.fromHex"#FFFFFF",
+-- Topbar title: dark-to-light diagonal — ☯ balanced
+WindowTopbarTitle=aa:Gradient({
+["0"]={Color=Color3.fromHex"#000000",Transparency=0},
+["30"]={Color=Color3.fromHex"#444444",Transparency=0},
+["60"]={Color=Color3.fromHex"#AAAAAA",Transparency=0},
+["100"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+},{Rotation=135}),
 
 -- Shadow: soft black
 WindowShadow=Color3.fromHex"#000000",
@@ -28394,29 +28399,36 @@ WindowShadow=Color3.fromHex"#000000",
 ScrollBar=Color3.fromHex"#DDDDDD",
 ScrollBarBackground=Color3.fromHex"#111111",
 
--- ✦ Tabs: Dark & Light Soft ✦
--- Inactive: deep yin dark — barely visible resting state
--- Active:   yang light soft — glowing white warmth
+-- ☯ Tabs: True Dark & Light gradient
+-- Tab text: deep dark → pure light diagonal — yin left, yang right
 TabText=aa:Gradient({
-["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
-["100"]={Color=Color3.fromHex"#CCCCCC",Transparency=0},
-},{Rotation=90}),
-TabTextTransparency=0.45,
+["0"]={Color=Color3.fromHex"#111111",Transparency=0},
+["35"]={Color=Color3.fromHex"#555555",Transparency=0},
+["65"]={Color=Color3.fromHex"#BBBBBB",Transparency=0},
+["100"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+},{Rotation=135}),
+TabTextTransparency=0.35,
 TabTextTransparencyActive=0,
 
+-- Tab icon: same dark → light diagonal as text
 TabIcon=aa:Gradient({
-["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
-["100"]={Color=Color3.fromHex"#DDDDDD",Transparency=0},
-},{Rotation=90}),
-TabIconTransparency=0.5,
-TabIconTransparencyActive=0.05,
+["0"]={Color=Color3.fromHex"#111111",Transparency=0},
+["35"]={Color=Color3.fromHex"#555555",Transparency=0},
+["65"]={Color=Color3.fromHex"#CCCCCC",Transparency=0},
+["100"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+},{Rotation=135}),
+TabIconTransparency=0.4,
+TabIconTransparencyActive=0,
 
+-- Tab section title: bold dark-to-light sweep
 TabTitle=aa:Gradient({
-["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
-["100"]={Color=Color3.fromHex"#AAAAAA",Transparency=0},
+["0"]={Color=Color3.fromHex"#000000",Transparency=0},
+["40"]={Color=Color3.fromHex"#666666",Transparency=0},
+["70"]={Color=Color3.fromHex"#CCCCCC",Transparency=0},
+["100"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
 },{Rotation=135}),
 
--- Tab backgrounds: yin dark base → yang soft light on active
+-- Tab backgrounds: yin dark void → yang light glow
 TabBackground=Color3.fromHex"#080808",
 TabBackgroundHover=Color3.fromHex"#141414",
 TabBackgroundHoverTransparency=0,
@@ -28433,7 +28445,7 @@ TabBorder=aa:Gradient({
 ["100"]={Color=Color3.fromHex"#AAAAAA",Transparency=0},
 },{Rotation=90}),
 TabBorderTransparency=1,
-TabBorderTransparencyActive=0.6,
+TabBorderTransparencyActive=0.55,
 
 -- Dropdown
 DropdownBackground=Color3.fromHex"#0D0D0D",
@@ -28443,8 +28455,8 @@ DropdownTabBackground=Color3.fromHex"#1A1A1A",
 ProgressBar=Color3.fromHex"#DDDDDD",
 
 Metadata={
-Title="☯ Dark & Light Soft",
-Description="☯ YinYang — enchanted dark & light soft. Where yin breathes and yang glows.",
+Title="☯ Yin Yang",
+Description="☯ YinYang — where darkness and light are one. Yin breathes. Yang glows.",
 BackgroundImage="rbxassetid://111608439990713",
 },
 },
