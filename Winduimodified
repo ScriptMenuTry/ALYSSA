@@ -28308,6 +28308,9 @@ ElementBackgroundTransparency=0,
 YinYang={
 Name="YinYang",
 
+-- Minecraft pixel font
+Font="rbxassetid://12187371840",
+
 -- ☯ Accent: diagonal black-to-white — the yin yang split
 Accent=aa:Gradient({
 ["0"]={Color=Color3.fromHex"#000000",Transparency=0},
@@ -28319,14 +28322,14 @@ Accent=aa:Gradient({
 -- Dialog: deep black (yin side)
 Dialog=Color3.fromHex"#111111",
 
--- Outline: pure white — crisp contrast ring
+-- Outline: white-to-black diagonal
 Outline=aa:Gradient({
 ["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
 ["50"]={Color=Color3.fromHex"#888888",Transparency=0},
 ["100"]={Color=Color3.fromHex"#000000",Transparency=0},
 },{Rotation=135}),
 
--- Text: white on black background
+-- Text: pure white
 Text=Color3.fromHex"#FFFFFF",
 
 -- Placeholder: soft mid-grey
@@ -28335,7 +28338,7 @@ Placeholder=Color3.fromHex"#888888",
 -- Background: absolute black (yin void)
 Background=Color3.fromHex"#000000",
 
--- Button: white (yang — the light dot inside the dark)
+-- Button: white yang dot
 Button=aa:Gradient({
 ["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
 ["100"]={Color=Color3.fromHex"#CCCCCC",Transparency=0},
@@ -28344,10 +28347,10 @@ Button=aa:Gradient({
 -- Icon: bright white
 Icon=Color3.fromHex"#FFFFFF",
 
--- Toggle: white knob — yang light on yin dark bar
+-- Toggle: white knob
 Toggle=Color3.fromHex"#FFFFFF",
 
--- ToggleBar: dark charcoal bar
+-- ToggleBar: dark charcoal
 ToggleBar=aa:Gradient({
 ["0"]={Color=Color3.fromHex"#1A1A1A",Transparency=0},
 ["100"]={Color=Color3.fromHex"#2E2E2E",Transparency=0},
@@ -28359,11 +28362,11 @@ Slider=Color3.fromHex"#FFFFFF",
 -- Checkbox: white box
 Checkbox=Color3.fromHex"#FFFFFF",
 
--- CheckboxBorder: subtle grey glow
+-- CheckboxBorder: subtle grey
 CheckboxBorder=Color3.fromHex"#AAAAAA",
 CheckboxBorderTransparency=0.5,
 
--- Panel: very dark near-black glass
+-- Panel: dark glass
 PanelBackground=Color3.fromHex"#111111",
 PanelBackgroundTransparency=0.75,
 
@@ -28377,25 +28380,26 @@ SliderIcon=Color3.fromHex"#FFFFFF",
 -- Primary: white
 Primary=Color3.fromHex"#FFFFFF",
 
--- Element cards: very dark charcoal — the yin field
+-- Element cards: dark charcoal
 ElementBackground=Color3.fromHex"#1A1A1A",
 ElementBackgroundTransparency=0,
 
--- Topbar: white title on black bar
+-- Topbar title: white
 WindowTopbarTitle=Color3.fromHex"#FFFFFF",
 
--- Shadow: soft grey-black
+-- Shadow: dark
 WindowShadow=Color3.fromHex"#000000",
 
--- Scrollbar: white bar on dark track
+-- Scrollbar: white on dark track
 ScrollBar=Color3.fromHex"#FFFFFF",
 ScrollBarBackground=Color3.fromHex"#1A1A1A",
 
--- Tab colours — yin dark base, yang white active
+-- Tabs: ✦ Enchanted Dark & Light ✦
+-- Active tab glows with yang-white; inactive sinks into yin-black
 TabBackground=Color3.fromHex"#0A0A0A",
 TabBackgroundHover=Color3.fromHex"#1A1A1A",
 TabBackgroundHoverTransparency=0,
-TabBackgroundActive=Color3.fromHex"#2A2A2A",
+TabBackgroundActive=Color3.fromHex"#FFFFFF",
 TabBackgroundActiveTransparency=0,
 
 -- Dropdown
@@ -28406,7 +28410,8 @@ DropdownTabBackground=Color3.fromHex"#1C1C1C",
 ProgressBar=Color3.fromHex"#FFFFFF",
 
 Metadata={
-Description="☯ YinYang — pure black & white. Dark as night, bright as day.",
+Title="✦ Enchanted Dark & Light ✦",
+Description="☯ YinYang — enchanted dark & light. Where shadow meets radiance.",
 BackgroundImage="rbxassetid://111608439990713",
 },
 },
@@ -40181,8 +40186,9 @@ local b=true
 
 local d=aa.Themes[aA.Theme or"YinYang"]
 
--- Auto-apply background for YinYang theme
-if (aA.Theme=="YinYang" or aa.Theme and aa.Theme.Name=="YinYang") and not aA.Background then
+-- Auto-apply background: YinYang only, never Sovereign
+local _activeTheme=aA.Theme or (aa.Theme and aa.Theme.Name)
+if _activeTheme=="YinYang" and not aA.Background then
 local _yy=aa.Themes["YinYang"]
 if _yy and _yy.Metadata and _yy.Metadata.BackgroundImage then
 aA.Background=_yy.Metadata.BackgroundImage
