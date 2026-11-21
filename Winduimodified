@@ -28308,71 +28308,71 @@ ElementBackgroundTransparency=0,
 YinYang={
 Name="YinYang",
 
--- Minecraft pixel font
+-- ☯ Minecraft pixel font — blocky enchanted lettering
 Font="rbxassetid://12187371840",
 
--- ☯ Accent: diagonal black-to-white — the yin yang split
+-- Accent: diagonal yin-yang split gradient
 Accent=aa:Gradient({
 ["0"]={Color=Color3.fromHex"#000000",Transparency=0},
-["45"]={Color=Color3.fromHex"#444444",Transparency=0},
-["55"]={Color=Color3.fromHex"#BBBBBB",Transparency=0},
+["45"]={Color=Color3.fromHex"#333333",Transparency=0},
+["55"]={Color=Color3.fromHex"#CCCCCC",Transparency=0},
 ["100"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
 },{Rotation=135}),
 
--- Dialog: deep black (yin side)
-Dialog=Color3.fromHex"#111111",
+-- Dialog: deep matte black
+Dialog=Color3.fromHex"#0D0D0D",
 
--- Outline: white-to-black diagonal
+-- Outline: soft white glow ring
 Outline=aa:Gradient({
 ["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
-["50"]={Color=Color3.fromHex"#888888",Transparency=0},
-["100"]={Color=Color3.fromHex"#000000",Transparency=0},
+["50"]={Color=Color3.fromHex"#777777",Transparency=0},
+["100"]={Color=Color3.fromHex"#111111",Transparency=0},
 },{Rotation=135}),
 
--- Text: pure white
+-- Text: crisp white
 Text=Color3.fromHex"#FFFFFF",
 
--- Placeholder: soft mid-grey
-Placeholder=Color3.fromHex"#888888",
+-- Placeholder: soft grey
+Placeholder=Color3.fromHex"#777777",
 
--- Background: absolute black (yin void)
+-- Background: pure void black
 Background=Color3.fromHex"#000000",
 
--- Button: white yang dot
+-- Button: white yang glow
 Button=aa:Gradient({
 ["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
-["100"]={Color=Color3.fromHex"#CCCCCC",Transparency=0},
+["100"]={Color=Color3.fromHex"#BBBBBB",Transparency=0},
 },{Rotation=135}),
 
--- Icon: bright white
-Icon=Color3.fromHex"#FFFFFF",
+-- Icon: soft white
+Icon=Color3.fromHex"#E8E8E8",
 
--- Toggle: white knob
+-- Toggle: white knob on black bar
 Toggle=Color3.fromHex"#FFFFFF",
 
--- ToggleBar: dark charcoal
+-- ToggleBar: dark glass bar
 ToggleBar=aa:Gradient({
-["0"]={Color=Color3.fromHex"#1A1A1A",Transparency=0},
-["100"]={Color=Color3.fromHex"#2E2E2E",Transparency=0},
+["0"]={Color=Color3.fromHex"#111111",Transparency=0},
+["100"]={Color=Color3.fromHex"#222222",Transparency=0},
 },{Rotation=90}),
 
--- Slider: white fill
-Slider=Color3.fromHex"#FFFFFF",
+-- Slider: soft white fill
+Slider=Color3.fromHex"#DDDDDD",
 
 -- Checkbox: white box
 Checkbox=Color3.fromHex"#FFFFFF",
 
 -- CheckboxBorder: subtle grey
-CheckboxBorder=Color3.fromHex"#AAAAAA",
+CheckboxBorder=Color3.fromHex"#999999",
 CheckboxBorderTransparency=0.5,
 
--- Panel: dark glass
-PanelBackground=Color3.fromHex"#111111",
-PanelBackgroundTransparency=0.75,
+-- Panel: frosted dark glass
+PanelBackground=Color3.fromHex"#0A0A0A",
+PanelBackgroundTransparency=0.7,
 
--- Label: dark glass
+-- Label: dark glass label
 LabelBackground=Color3.fromHex"#000000",
-LabelBackgroundTransparency=0.6,
+LabelBackgroundTransparency=0.55,
 
 -- SliderIcon: white pill
 SliderIcon=Color3.fromHex"#FFFFFF",
@@ -28380,38 +28380,71 @@ SliderIcon=Color3.fromHex"#FFFFFF",
 -- Primary: white
 Primary=Color3.fromHex"#FFFFFF",
 
--- Element cards: dark charcoal
-ElementBackground=Color3.fromHex"#1A1A1A",
+-- Element cards: very dark charcoal
+ElementBackground=Color3.fromHex"#141414",
 ElementBackgroundTransparency=0,
 
--- Topbar title: white
+-- Topbar title: pure white
 WindowTopbarTitle=Color3.fromHex"#FFFFFF",
 
--- Shadow: dark
+-- Shadow: soft black
 WindowShadow=Color3.fromHex"#000000",
 
--- Scrollbar: white on dark track
-ScrollBar=Color3.fromHex"#FFFFFF",
-ScrollBarBackground=Color3.fromHex"#1A1A1A",
+-- Scrollbar: soft white on dark track
+ScrollBar=Color3.fromHex"#DDDDDD",
+ScrollBarBackground=Color3.fromHex"#111111",
 
--- Tabs: ✦ Enchanted Dark & Light ✦
--- Active tab glows with yang-white; inactive sinks into yin-black
-TabBackground=Color3.fromHex"#0A0A0A",
-TabBackgroundHover=Color3.fromHex"#1A1A1A",
+-- ✦ Tabs: Dark & Light Soft ✦
+-- Inactive: deep yin dark — barely visible resting state
+-- Active:   yang light soft — glowing white warmth
+TabText=aa:Gradient({
+["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["100"]={Color=Color3.fromHex"#CCCCCC",Transparency=0},
+},{Rotation=90}),
+TabTextTransparency=0.45,
+TabTextTransparencyActive=0,
+
+TabIcon=aa:Gradient({
+["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["100"]={Color=Color3.fromHex"#DDDDDD",Transparency=0},
+},{Rotation=90}),
+TabIconTransparency=0.5,
+TabIconTransparencyActive=0.05,
+
+TabTitle=aa:Gradient({
+["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["100"]={Color=Color3.fromHex"#AAAAAA",Transparency=0},
+},{Rotation=135}),
+
+-- Tab backgrounds: yin dark base → yang soft light on active
+TabBackground=Color3.fromHex"#080808",
+TabBackgroundHover=Color3.fromHex"#141414",
 TabBackgroundHoverTransparency=0,
-TabBackgroundActive=Color3.fromHex"#FFFFFF",
+TabBackgroundActive=aa:Gradient({
+["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["50"]={Color=Color3.fromHex"#E8E8E8",Transparency=0},
+["100"]={Color=Color3.fromHex"#D0D0D0",Transparency=0},
+},{Rotation=135}),
 TabBackgroundActiveTransparency=0,
 
--- Dropdown
-DropdownBackground=Color3.fromHex"#111111",
-DropdownTabBackground=Color3.fromHex"#1C1C1C",
+-- Tab border: soft white glow on active
+TabBorder=aa:Gradient({
+["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["100"]={Color=Color3.fromHex"#AAAAAA",Transparency=0},
+},{Rotation=90}),
+TabBorderTransparency=1,
+TabBorderTransparencyActive=0.6,
 
--- ProgressBar: white fill
-ProgressBar=Color3.fromHex"#FFFFFF",
+-- Dropdown
+DropdownBackground=Color3.fromHex"#0D0D0D",
+DropdownTabBackground=Color3.fromHex"#1A1A1A",
+
+-- ProgressBar: soft white fill
+ProgressBar=Color3.fromHex"#DDDDDD",
 
 Metadata={
-Title="✦ Enchanted Dark & Light ✦",
-Description="☯ YinYang — enchanted dark & light. Where shadow meets radiance.",
+Title="☯ Dark & Light Soft",
+Description="☯ YinYang — enchanted dark & light soft. Where yin breathes and yang glows.",
 BackgroundImage="rbxassetid://111608439990713",
 },
 },
@@ -29407,6 +29440,9 @@ BackgroundTransparency=.9,
 })
 
 local _avatarCircle
+-- YinYang: no avatar icon in open button
+local _isYinYang=(ab.Theme and ab.Theme.Name=="YinYang")
+if not _isYinYang then
 task.spawn(function()
 local _lp=(cloneref or clonereference or function(v)return v end)(game:GetService"Players").LocalPlayer
 if _lp then
@@ -29422,7 +29458,9 @@ _avatarCircle.Image=_img or""
 end
 end
 end)
+end
 
+if not _isYinYang then
 _avatarCircle=ac("ImageLabel",{
 Image="",
 Size=UDim2.new(0,44,0,44),
@@ -29445,6 +29483,7 @@ Rotation=135,
 })
 }),
 })
+end -- not _isYinYang: no avatar for YinYang theme
 
 
 local am=ac("Frame",{
