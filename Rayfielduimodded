@@ -755,7 +755,7 @@ do
 
 end -- custom asset block
 
--- ☯ YinYang Script: Owner ID for profile role detection
+-- YinYang Script: Owner ID for profile role detection
 local YINYANG_OWNER_ID = 9670879660
 
 local minSize = Vector2.new(1024, 768)
@@ -855,9 +855,7 @@ local function ChangeTheme(Theme)
 	end
 end
 
--- ☯ YinYang: Apply Minecraft-style font to a TextLabel/TextButton/TextBox
-local MinecraftFontId = "rbxasset://fonts/families/RobotoMono.json" -- closest monospace; override below if custom asset available
--- Roblox built-in that resembles pixel/block fonts:
+-- YinYang: Minecraft-style monospace bold font
 local function applyMinecraftFont(label)
 	if label and (label:IsA("TextLabel") or label:IsA("TextButton") or label:IsA("TextBox")) then
 		pcall(function()
@@ -866,26 +864,61 @@ local function applyMinecraftFont(label)
 	end
 end
 
--- ☯ YinYang: Apply white→black gradient shimmer to a text element via UIGradient
--- Gradient goes left-to-right: white → mid-grey → black → mid-grey → white
+-- YinYang: White-to-black gradient on text elements
 local function applyYinYangGradientText(label)
 	if not label then return end
 	pcall(function()
-		-- Remove existing gradient if present
 		local existing = label:FindFirstChildOfClass("UIGradient")
 		if existing then existing:Destroy() end
-
 		local gradient = Instance.new("UIGradient")
 		gradient.Color = ColorSequence.new({
-			ColorSequenceKeypoint.new(0,   Color3.fromRGB(255, 255, 255)), -- pure white
-			ColorSequenceKeypoint.new(0.3, Color3.fromRGB(200, 200, 200)), -- light grey
-			ColorSequenceKeypoint.new(0.5, Color3.fromRGB(120, 120, 120)), -- mid grey
-			ColorSequenceKeypoint.new(0.7, Color3.fromRGB(50,  50,  50)),  -- dark grey
-			ColorSequenceKeypoint.new(1,   Color3.fromRGB(0,   0,   0)),   -- pure black
+			ColorSequenceKeypoint.new(0,   Color3.fromRGB(255, 255, 255)),
+			ColorSequenceKeypoint.new(0.3, Color3.fromRGB(200, 200, 200)),
+			ColorSequenceKeypoint.new(0.5, Color3.fromRGB(120, 120, 120)),
+			ColorSequenceKeypoint.new(0.7, Color3.fromRGB(50,  50,  50)),
+			ColorSequenceKeypoint.new(1,   Color3.fromRGB(0,   0,   0)),
 		})
-		gradient.Rotation = 90 -- top-to-bottom for a dramatic yinyang sweep
+		gradient.Rotation = 90
 		gradient.Parent = label
 		applyMinecraftFont(label)
+	end)
+end
+
+-- YinYang: Animated shimmer sweep on a gradient (call in a loop or RunService)
+local function animateGradientShimmer(gradient, speed)
+	speed = speed or 1.5
+	task.spawn(function()
+		local t = 0
+		local conn
+		conn = RunService.Heartbeat:Connect(function(dt)
+			if not gradient or not gradient.Parent then
+				conn:Disconnect()
+				return
+			end
+			t = t + dt * speed
+			local offset = (math.sin(t) * 0.3)
+			gradient.Offset = Vector2.new(offset, 0)
+		end)
+	end)
+end
+
+-- YinYang: Set the background image on the main window
+local YINYANG_BG_ID = "rbxassetid://104092388902076"
+local function applyWindowBackground(frame)
+	pcall(function()
+		local existing = frame:FindFirstChild("YinYangBG")
+		if existing then existing:Destroy() end
+		local bg = Instance.new("ImageLabel")
+		bg.Name = "YinYangBG"
+		bg.Size = UDim2.new(1, 0, 1, 0)
+		bg.Position = UDim2.new(0, 0, 0, 0)
+		bg.Image = YINYANG_BG_ID
+		bg.ImageTransparency = 0.55
+		bg.BackgroundTransparency = 1
+		bg.ScaleType = Enum.ScaleType.Crop
+		bg.ZIndex = frame.ZIndex
+		bg.Parent = frame
+		bg.ZIndex = 0
 	end)
 end
 
@@ -1672,8 +1705,14 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 	local Passthrough = false
 	Topbar.Title.Text = Settings.Name
-	-- ☯ YinYang: Minecraft font + white→black gradient on window title
+	-- YinYang: Minecraft font + animated gradient on window title
 	applyYinYangGradientText(Topbar.Title)
+	pcall(function()
+		local titleGrad = Topbar.Title:FindFirstChildOfClass("UIGradient")
+		if titleGrad then animateGradientShimmer(titleGrad, 0.8) end
+	end)
+	-- YinYang: Background image on main window
+	applyWindowBackground(Main)
 
 	Main.Size = UDim2.new(0, 420, 0, 100)
 	Main.Visible = true
@@ -2016,15 +2055,22 @@ function RayfieldLibrary:CreateWindow(Settings)
 	Notifications.Visible = true
 	Rayfield.Enabled = true
 
-	task.wait(0.5)
-	TweenService:Create(Main, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
-	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.6}):Play()
-	task.wait(0.1)
-	TweenService:Create(LoadingFrame.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
-	task.wait(0.05)
-	TweenService:Create(LoadingFrame.Subtitle, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
-	task.wait(0.05)
-	TweenService:Create(LoadingFrame.Version, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
+	-- YinYang: Cinematic open sequence
+	-- Step 1: punch in from tiny
+	Main.Size = UDim2.new(0, 80, 0, 80)
+	Main.Position = UDim2.new(0.5, 0, 0.5, 0)
+	Main.AnchorPoint = Vector2.new(0.5, 0.5)
+	Main.BackgroundTransparency = 1
+	task.wait(0.15)
+	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 420, 0, 120), BackgroundTransparency = 0}):Play()
+	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {ImageTransparency = 0.5}):Play()
+	task.wait(0.3)
+	-- Step 2: fade in loading text with stagger
+	TweenService:Create(LoadingFrame.Title, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
+	task.wait(0.08)
+	TweenService:Create(LoadingFrame.Subtitle, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
+	task.wait(0.08)
+	TweenService:Create(LoadingFrame.Version, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
 
 
 	Elements.Template.LayoutOrder = 100000
@@ -2053,8 +2099,12 @@ function RayfieldLibrary:CreateWindow(Settings)
 		TabButton.Title.Text = Name
 		TabButton.Parent = TabList
 		TabButton.Title.TextWrapped = false
-		-- ☯ YinYang: Minecraft font + gradient on tab title
+		-- YinYang: Minecraft font + animated gradient on tab title
 		applyYinYangGradientText(TabButton.Title)
+		pcall(function()
+			local tabGrad = TabButton.Title:FindFirstChildOfClass("UIGradient")
+			if tabGrad then animateGradientShimmer(tabGrad, 1.2) end
+		end)
 		TabButton.Size = UDim2.new(0, TabButton.Title.TextBounds.X + 30, 0, 30)
 
 		if Image and Image ~= 0 then
@@ -3619,18 +3669,30 @@ function RayfieldLibrary:CreateWindow(Settings)
 	Elements.Visible = true
 
 
-	task.wait(1.1)
-	TweenService:Create(Main, TweenInfo.new(0.7, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut), {Size = UDim2.new(0, 390, 0, 90)}):Play()
-	task.wait(0.3)
-	TweenService:Create(LoadingFrame.Title, TweenInfo.new(0.2, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
-	TweenService:Create(LoadingFrame.Subtitle, TweenInfo.new(0.2, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
-	TweenService:Create(LoadingFrame.Version, TweenInfo.new(0.2, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
-	task.wait(0.1)
-	-- ☯ YinYang: mobile-responsive sizing
-	local mobileWidth = math.min(Rayfield.AbsoluteSize.X - 16, 480)
-	TweenService:Create(Main, TweenInfo.new(0.6, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {Size = useMobileSizing and UDim2.new(0, mobileWidth, 0, 310) or UDim2.new(0, 500, 0, 475)}):Play()
-	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {ImageTransparency = 0.6}):Play()
+	-- YinYang: Hold on loading screen then cinematic expand
+	task.wait(0.9)
+	-- Fade loading text out with stagger
+	TweenService:Create(LoadingFrame.Version, TweenInfo.new(0.18, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
+	task.wait(0.06)
+	TweenService:Create(LoadingFrame.Subtitle, TweenInfo.new(0.18, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
+	task.wait(0.06)
+	TweenService:Create(LoadingFrame.Title, TweenInfo.new(0.18, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
+	task.wait(0.12)
 
+	-- Squeeze then slam open (elastic punch)
+	TweenService:Create(Main, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Size = UDim2.new(0, 360, 0, 70)}):Play()
+	task.wait(0.22)
+
+	-- YinYang: mobile-responsive sizing
+	local mobileWidth = math.min(Rayfield.AbsoluteSize.X - 16, 480)
+	local targetW = useMobileSizing and mobileWidth or 500
+	local targetH = useMobileSizing and 310 or 475
+
+	TweenService:Create(Main, TweenInfo.new(0.7, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, targetW, 0, targetH)}):Play()
+	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {ImageTransparency = 0.5}):Play()
+	task.wait(0.12)
+
+	-- Navbar reveal: prepare
 	Topbar.BackgroundTransparency = 1
 	Topbar.Divider.Size = UDim2.new(0, 0, 0, 1)
 	Topbar.Divider.BackgroundColor3 = SelectedTheme.ElementStroke
@@ -3643,28 +3705,47 @@ function RayfieldLibrary:CreateWindow(Settings)
 	Topbar.ChangeSize.ImageTransparency = 1
 	Topbar.Hide.ImageTransparency = 1
 
-
-	task.wait(0.5)
+	-- Topbar slides down from above
+	Topbar.Position = UDim2.new(0, 0, 0, -20)
 	Topbar.Visible = true
-	TweenService:Create(Topbar, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
-	TweenService:Create(Topbar.CornerRepair, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
-	task.wait(0.1)
-	TweenService:Create(Topbar.Divider, TweenInfo.new(1, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, 0, 0, 1)}):Play()
-	TweenService:Create(Topbar.Title, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
-	task.wait(0.05)
-	TweenService:Create(Topbar.Search, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {ImageTransparency = 0.8}):Play()
-	task.wait(0.05)
+
+	task.wait(0.3)
+	-- Topbar drops into place
+	TweenService:Create(Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 0, Position = UDim2.new(0, 0, 0, 0)}):Play()
+	TweenService:Create(Topbar.CornerRepair, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
+	task.wait(0.15)
+
+	-- Divider sweeps across
+	TweenService:Create(Topbar.Divider, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, 0, 0, 1)}):Play()
+	-- Title fades in
+	TweenService:Create(Topbar.Title, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
+	task.wait(0.07)
+
+	-- Navbar buttons cascade in left-to-right
+	TweenService:Create(Topbar.Search, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {ImageTransparency = 0.15}):Play()
+	task.wait(0.07)
 	if Topbar:FindFirstChild('Settings') then
-		TweenService:Create(Topbar.Settings, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {ImageTransparency = 0.8}):Play()
-		task.wait(0.05)
+		TweenService:Create(Topbar.Settings, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {ImageTransparency = 0.15}):Play()
+		task.wait(0.07)
 	end
-	TweenService:Create(Topbar.ChangeSize, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {ImageTransparency = 0.8}):Play()
-	task.wait(0.05)
-	TweenService:Create(Topbar.Hide, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {ImageTransparency = 0.8}):Play()
+	TweenService:Create(Topbar.ChangeSize, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {ImageTransparency = 0.15}):Play()
+	task.wait(0.07)
+	TweenService:Create(Topbar.Hide, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {ImageTransparency = 0.15}):Play()
+
+	-- Profile button cascade (injected by profile system below)
+	pcall(function()
+		local profBtn = Topbar:FindFirstChild("ProfileBtn")
+		if profBtn then
+			profBtn.ImageTransparency = 1
+			task.wait(0.07)
+			TweenService:Create(profBtn, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {ImageTransparency = 0.1}):Play()
+		end
+	end)
+
 	task.wait(0.3)
 
 	if dragBar then
-		TweenService:Create(dragBarCosmetic, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.7}):Play()
+		TweenService:Create(dragBarCosmetic, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 0.65}):Play()
 	end
 
 	function Window.ModifyTheme(NewTheme)
@@ -3682,56 +3763,41 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 	if not success then warn('Rayfield had an issue creating settings.') end
 
-	-- ☯ YinYang: Profile Screen tab
+	-- YinYang: Profile Screen
 	pcall(function()
 		local localPlayer = Players.LocalPlayer
 		local userId = localPlayer and localPlayer.UserId or 0
 		local username = localPlayer and localPlayer.Name or "Unknown"
 		local displayName = localPlayer and localPlayer.DisplayName or username
 
-		-- Determine role
 		local userRole = "Member"
 		if userId == YINYANG_OWNER_ID then
 			userRole = "Owner"
 		end
 
-		-- Create the profile tab (internal/ext tab so it doesn't show in normal tab list)
-		local ProfileTab = Window:CreateTab("☯ Profile", 0, true)
+		local ProfileTab = Window:CreateTab("YY Profile", 0, true)
 
-		-- Reorder so it appears at the end of tab list
-		if TabList["☯ Profile"] then
-			TabList["☯ Profile"].LayoutOrder = 999
-			TabList["☯ Profile"].Visible = true
+		if TabList["YY Profile"] then
+			TabList["YY Profile"].LayoutOrder = 999
+			TabList["YY Profile"].Visible = true
 		end
-		if Elements["☯ Profile"] then
-			Elements["☯ Profile"].LayoutOrder = 999
+		if Elements["YY Profile"] then
+			Elements["YY Profile"].LayoutOrder = 999
 		end
 
-		-- Header section
+		-- Profile info
 		ProfileTab:CreateSection("User Profile")
-
-		-- Avatar display label (uses rbxthumb for the avatar)
 		local avatarUrl = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(userId) .. "&w=150&h=150"
+		ProfileTab:CreateLabel(displayName .. "  (@" .. username .. ")", avatarUrl)
+		ProfileTab:CreateLabel("Role: " .. userRole)
+		ProfileTab:CreateLabel("User ID: " .. tostring(userId))
 
-		ProfileTab:CreateLabel("👤  " .. displayName .. "  (@" .. username .. ")", avatarUrl)
-
-		-- Role label with owner/member distinction
-		local roleIcon = userRole == "Owner" and "👑" or "🛡️"
-		ProfileTab:CreateLabel(roleIcon .. "  Role: " .. userRole)
-
-		-- User ID label
-		ProfileTab:CreateLabel("🆔  User ID: " .. tostring(userId))
-
-		-- Account stats section
+		-- Account info
 		ProfileTab:CreateSection("Account Info")
-
-		-- Account age via Players service
 		pcall(function()
 			local accountAge = localPlayer.AccountAge or 0
-			ProfileTab:CreateLabel("📅  Account Age: " .. tostring(accountAge) .. " days")
+			ProfileTab:CreateLabel("Account Age: " .. tostring(accountAge) .. " days")
 		end)
-
-		-- Membership type
 		pcall(function()
 			local membership = localPlayer.MembershipType
 			local membershipName = "None"
@@ -3742,12 +3808,10 @@ function RayfieldLibrary:CreateWindow(Settings)
 			elseif membership == Enum.MembershipType.OutrageousBuildersClub then
 				membershipName = "Outrageous BC"
 			elseif membership == Enum.MembershipType.Premium then
-				membershipName = "Premium ⭐"
+				membershipName = "Premium"
 			end
-			ProfileTab:CreateLabel("💎  Membership: " .. membershipName)
+			ProfileTab:CreateLabel("Membership: " .. membershipName)
 		end)
-
-		-- Following/Follower counts via API
 		pcall(function()
 			local followersCount = "N/A"
 			local followingCount = "N/A"
@@ -3765,18 +3829,14 @@ function RayfieldLibrary:CreateWindow(Settings)
 				local ok4, decoded2 = pcall(function() return HttpService:JSONDecode(fwData) end)
 				if ok4 and decoded2 and decoded2.count then followingCount = tostring(decoded2.count) end
 			end
-			ProfileTab:CreateLabel("👥  Followers: " .. followersCount .. "  |  Following: " .. followingCount)
+			ProfileTab:CreateLabel("Followers: " .. followersCount .. "  |  Following: " .. followingCount)
 		end)
-
-		-- Friend count
 		pcall(function()
 			local friendCount = #Players:GetFriendsAsync(userId):GetCurrentPage()
-			ProfileTab:CreateLabel("🤝  Friends (approx): " .. tostring(friendCount))
+			ProfileTab:CreateLabel("Friends (approx): " .. tostring(friendCount))
 		end)
 
-		-- Actions section
 		ProfileTab:CreateSection("Actions")
-
 		ProfileTab:CreateButton({
 			Name = "Copy Username",
 			Callback = function()
@@ -3784,7 +3844,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 				RayfieldLibrary:Notify({Title = "Profile", Content = "Copied username: " .. username, Duration = 3, Image = 4483362748})
 			end,
 		})
-
 		ProfileTab:CreateButton({
 			Name = "Copy User ID",
 			Callback = function()
@@ -3793,46 +3852,107 @@ function RayfieldLibrary:CreateWindow(Settings)
 			end,
 		})
 
-		-- Add a visible profile button in the topbar
+		-- ---- Navbar Profile Button (animated, no emoji) ----
 		pcall(function()
-			local ProfileBtn = Instance.new("TextButton")
+			-- Outer glow frame
+			local ProfileGlow = Instance.new("Frame")
+			ProfileGlow.Name = "ProfileGlow"
+			ProfileGlow.Size = UDim2.new(0, 34, 0, 34)
+			ProfileGlow.Position = UDim2.new(0, 6, 0.5, 0)
+			ProfileGlow.AnchorPoint = Vector2.new(0, 0.5)
+			ProfileGlow.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			ProfileGlow.BackgroundTransparency = 0.85
+			ProfileGlow.BorderSizePixel = 0
+			ProfileGlow.ZIndex = 4
+			ProfileGlow.Parent = Topbar
+			local profileGlowCorner = Instance.new("UICorner")
+			profileGlowCorner.CornerRadius = UDim.new(1, 0)
+			profileGlowCorner.Parent = ProfileGlow
+
+			-- Avatar image button
+			local ProfileBtn = Instance.new("ImageButton")
 			ProfileBtn.Name = "ProfileBtn"
 			ProfileBtn.Size = UDim2.new(0, 28, 0, 28)
-			ProfileBtn.Position = UDim2.new(0, 8, 0.5, 0)
-			ProfileBtn.AnchorPoint = Vector2.new(0, 0.5)
+			ProfileBtn.Position = UDim2.new(0.5, 0, 0.5, 0)
+			ProfileBtn.AnchorPoint = Vector2.new(0.5, 0.5)
 			ProfileBtn.BackgroundTransparency = 1
-			ProfileBtn.Text = userRole == "Owner" and "👑" or "👤"
-			ProfileBtn.TextSize = 18
-			ProfileBtn.Font = Enum.Font.GothamBold
-			ProfileBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+			ProfileBtn.Image = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(userId) .. "&w=60&h=60"
+			ProfileBtn.ImageTransparency = 0.1
 			ProfileBtn.ZIndex = 5
-			ProfileBtn.Parent = Topbar
+			ProfileBtn.Parent = ProfileGlow
+			local profileCorner = Instance.new("UICorner")
+			profileCorner.CornerRadius = UDim.new(1, 0)
+			profileCorner.Parent = ProfileBtn
 
+			-- Role badge (small label below avatar, text only)
+			local RoleBadge = Instance.new("TextLabel")
+			RoleBadge.Name = "RoleBadge"
+			RoleBadge.Size = UDim2.new(0, 44, 0, 10)
+			RoleBadge.Position = UDim2.new(0.5, 0, 1, 2)
+			RoleBadge.AnchorPoint = Vector2.new(0.5, 0)
+			RoleBadge.BackgroundTransparency = 1
+			RoleBadge.Text = userRole == "Owner" and "OWNER" or "MEMBER"
+			RoleBadge.TextSize = 7
+			RoleBadge.Font = Enum.Font.GothamBold
+			RoleBadge.TextColor3 = userRole == "Owner" and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(180, 180, 180)
+			RoleBadge.TextTransparency = 0.1
+			RoleBadge.ZIndex = 5
+			RoleBadge.Parent = ProfileGlow
+
+			-- UIStroke on glow frame for the gradient border effect
+			local profileStroke = Instance.new("UIStroke")
+			profileStroke.Color = Color3.fromRGB(220, 220, 220)
+			profileStroke.Thickness = 1.5
+			profileStroke.Transparency = 0.4
+			profileStroke.Parent = ProfileGlow
+
+			-- Idle pulse animation
+			local pulseActive = true
+			task.spawn(function()
+				while pulseActive and ProfileGlow and ProfileGlow.Parent do
+					TweenService:Create(ProfileGlow, TweenInfo.new(1.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.75}):Play()
+					task.wait(1.6)
+					TweenService:Create(ProfileGlow, TweenInfo.new(1.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.9}):Play()
+					task.wait(1.6)
+				end
+			end)
+
+			-- Click handler
 			ProfileBtn.MouseButton1Click:Connect(function()
+				-- Click punch animation
+				TweenService:Create(ProfileGlow, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, 28, 0, 28)}):Play()
+				task.wait(0.1)
+				TweenService:Create(ProfileGlow, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 34, 0, 34)}):Play()
+
 				task.spawn(function()
-					-- Deselect all other tabs
 					for _, OtherTabButton in ipairs(TabList:GetChildren()) do
 						if OtherTabButton.Name ~= "Template" and OtherTabButton.ClassName == "Frame" and OtherTabButton.Name ~= "Placeholder" then
-							TweenService:Create(OtherTabButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.TabBackground}):Play()
+							TweenService:Create(OtherTabButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.TabBackground, BackgroundTransparency = 0.7}):Play()
 							TweenService:Create(OtherTabButton.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextColor3 = SelectedTheme.TabTextColor}):Play()
-							TweenService:Create(OtherTabButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.7}):Play()
 						end
 					end
 					siaCurrentTab = nil
-					if Elements["☯ Profile"] then
-						Elements.UIPageLayout:JumpTo(Elements["☯ Profile"])
+					if Elements["YY Profile"] then
+						Elements.UIPageLayout:JumpTo(Elements["YY Profile"])
 					end
-					RayfieldLibrary:Notify({Title = "Profile", Content = "Viewing profile for " .. displayName .. " [" .. userRole .. "]", Duration = 3, Image = 4483362748})
+					RayfieldLibrary:Notify({Title = "Profile", Content = displayName .. " [ " .. userRole .. " ]", Duration = 3, Image = 4483362748})
 				end)
 			end)
 
-			-- Hover glow
+			-- Hover animations
 			ProfileBtn.MouseEnter:Connect(function()
-				TweenService:Create(ProfileBtn, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
+				TweenService:Create(ProfileGlow, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 38, 0, 38), BackgroundTransparency = 0.6}):Play()
+				TweenService:Create(profileStroke, TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
+				TweenService:Create(ProfileBtn, TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
 			end)
 			ProfileBtn.MouseLeave:Connect(function()
-				TweenService:Create(ProfileBtn, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.2}):Play()
+				TweenService:Create(ProfileGlow, TweenInfo.new(0.35, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 34, 0, 34), BackgroundTransparency = 0.85}):Play()
+				TweenService:Create(profileStroke, TweenInfo.new(0.35, Enum.EasingStyle.Exponential), {Transparency = 0.4}):Play()
+				TweenService:Create(ProfileBtn, TweenInfo.new(0.35, Enum.EasingStyle.Exponential), {ImageTransparency = 0.1}):Play()
 			end)
+
+			-- Destroy cleanup
+			ProfileGlow.Destroying:Connect(function() pulseActive = false end)
 		end)
 	end)
 
