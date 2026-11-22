@@ -493,25 +493,20 @@ local RayfieldLibrary = {
 			-- Crisp paper-white text on absolute void
 			TextColor = Color3.fromRGB(245, 245, 245),
 
-			-- Pure black canvas — the void itself
 			Background = Color3.fromRGB(0, 0, 0),
-			-- Topbar: barely-lifted charcoal so the window edge reads
-			Topbar = Color3.fromRGB(10, 10, 10),
-			-- Shadow: deep void, slightly warmer than pure black for depth
-			Shadow = Color3.fromRGB(5, 5, 5),
+			Topbar = Color3.fromRGB(0, 0, 0),
+			Shadow = Color3.fromRGB(0, 0, 0),
 
-			-- Notifications: near-black with just enough lift to separate
+			-- Notifications: near-black
 			NotificationBackground = Color3.fromRGB(8, 8, 8),
-			-- Action buttons flip to bright white — the Yang strike
-			NotificationActionsBackground = Color3.fromRGB(240, 240, 240),
+			NotificationActionsBackground = Color3.fromRGB(22, 22, 22),
 
-			-- Tabs: very dark slab, outlined with the gradient midpoint (soft white)
-			TabBackground = Color3.fromRGB(18, 18, 18),
-			TabStroke = Color3.fromRGB(90, 90, 90),           -- mid-grey — gradient outline midpoint
-			-- Selected tab inverts: white slab, the Yang side of the symbol
-			TabBackgroundSelected = Color3.fromRGB(230, 230, 230),
-			TabTextColor = Color3.fromRGB(200, 200, 200),
-			SelectedTabTextColor = Color3.fromRGB(10, 10, 10),
+			-- Tabs: dark slabs, selected = lifted dark grey (not blinding white)
+			TabBackground = Color3.fromRGB(12, 12, 12),
+			TabStroke = Color3.fromRGB(45, 45, 45),
+			TabBackgroundSelected = Color3.fromRGB(32, 32, 32),
+			TabTextColor = Color3.fromRGB(130, 130, 130),
+			SelectedTabTextColor = Color3.fromRGB(230, 230, 230),
 
 			-- Elements: dark slabs, semi-transparent to show background image
 			ElementBackground = Color3.fromRGB(8, 8, 8),
@@ -858,8 +853,16 @@ local function ChangeTheme(Theme)
 			end
 		end
 	end
-	-- YinYang: Re-apply background image after theme change
+	-- YinYang: Re-apply background image and keep Elements transparent
 	applyWindowBackground(Rayfield.Main)
+	pcall(function()
+		Elements.BackgroundTransparency = 1
+		for _, tabPage in ipairs(Elements:GetChildren()) do
+			if tabPage:IsA("ScrollingFrame") or tabPage:IsA("Frame") then
+				tabPage.BackgroundTransparency = 1
+			end
+		end
+	end)
 end
 
 -- YinYang: Minecraft-style monospace bold font
@@ -1740,8 +1743,18 @@ function RayfieldLibrary:CreateWindow(Settings)
 		local titleGrad = Topbar.Title:FindFirstChildOfClass("UIGradient")
 		if titleGrad then animateGradientShimmer(titleGrad, 0.8) end
 	end)
-	-- YinYang: Background image on main window
+	-- YinYang: Background image on main window; make Elements transparent so BG shows through
 	applyWindowBackground(Main)
+	pcall(function()
+		Elements.BackgroundTransparency = 1
+		Elements.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+		for _, tabPage in ipairs(Elements:GetChildren()) do
+			if tabPage:IsA("ScrollingFrame") or tabPage:IsA("Frame") then
+				tabPage.BackgroundTransparency = 1
+				tabPage.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+			end
+		end
+	end)
 
 	Main.Size = UDim2.new(0, 420, 0, 100)
 	Main.Visible = true
@@ -2174,6 +2187,17 @@ function RayfieldLibrary:CreateWindow(Settings)
 			end
 		end
 
+		-- YinYang: Tab pages are transparent so the BG image shows through
+		TabPage.BackgroundTransparency = 1
+		TabPage.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+		-- Dark scrollbar, not white
+		pcall(function()
+			TabPage.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 80)
+			TabPage.ScrollBarImageTransparency = 0.5
+			TabPage.ScrollBarThickness = 3
+			TabPage.TopImage = ""
+			TabPage.BottomImage = ""
+		end)
 		TabPage.Parent = Elements
 		if not FirstTab and not Ext then
 			Elements.UIPageLayout.Animated = false
