@@ -829,10 +829,10 @@ local function ChangeTheme(Theme)
 		Rayfield.Main.Topbar.Divider.BackgroundColor3 = SelectedTheme.ElementStroke
 	end
 
-	Main.Search.BackgroundColor3 = SelectedTheme.TextColor
-	Main.Search.Shadow.ImageColor3 = SelectedTheme.TextColor
+	Main.Search.BackgroundColor3 = SelectedTheme.ElementBackground
+	Main.Search.Shadow.ImageColor3 = SelectedTheme.Shadow
 	Main.Search.Search.ImageColor3 = SelectedTheme.TextColor
-	Main.Search.Input.PlaceholderColor3 = SelectedTheme.TextColor
+	Main.Search.Input.PlaceholderColor3 = SelectedTheme.PlaceholderColor
 	Main.Search.UIStroke.Color = SelectedTheme.SecondaryElementStroke
 
 	if Main:FindFirstChild('Notice') then
@@ -841,7 +841,13 @@ local function ChangeTheme(Theme)
 
 	for _, text in ipairs(Rayfield:GetDescendants()) do
 		if text.Parent.Parent ~= Notifications then
-			if text:IsA('TextLabel') or text:IsA('TextBox') then text.TextColor3 = SelectedTheme.TextColor end
+			if text:IsA('TextLabel') or text:IsA('TextBox') then
+				-- Skip special YinYang labels that have their own color
+				local skipNames = {RoleBadge = true, NavGlow = true, ProfileGlow = true}
+				if not skipNames[text.Parent.Name] and not skipNames[text.Name] then
+					text.TextColor3 = SelectedTheme.TextColor
+				end
+			end
 		end
 	end
 
@@ -904,23 +910,39 @@ local function animateGradientShimmer(gradient, speed)
 	end)
 end
 
--- YinYang: Set the background image on the main window
+-- YinYang: Background image system
+-- Applied inside Main at ZIndex 1, behind all UI elements (which sit at ZIndex 2+)
+-- Main.BackgroundTransparency stays 0 (black) so the bg image overlays it
 local YINYANG_BG_ID = "rbxassetid://104092388902076"
 local function applyWindowBackground(frame)
 	pcall(function()
 		local existing = frame:FindFirstChild("YinYangBG")
 		if existing then existing:Destroy() end
+
 		local bg = Instance.new("ImageLabel")
 		bg.Name = "YinYangBG"
 		bg.Size = UDim2.new(1, 0, 1, 0)
 		bg.Position = UDim2.new(0, 0, 0, 0)
+		bg.AnchorPoint = Vector2.new(0, 0)
 		bg.Image = YINYANG_BG_ID
-		bg.ImageTransparency = 0.55
+		bg.ImageTransparency = 0.45
 		bg.BackgroundTransparency = 1
+		bg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 		bg.ScaleType = Enum.ScaleType.Crop
-		bg.ZIndex = frame.ZIndex
+		bg.ZIndex = 1   -- lowest possible inside the frame
 		bg.Parent = frame
-		bg.ZIndex = 0
+
+		-- Round corners to match the window
+		local bgCorner = Instance.new("UICorner")
+		bgCorner.CornerRadius = UDim.new(0, 6)
+		bgCorner.Parent = bg
+
+		-- Make sure all direct children above ZIndex 1 so they render on top
+		for _, child in ipairs(frame:GetChildren()) do
+			if child ~= bg and child:IsA("GuiObject") and child.ZIndex < 2 then
+				child.ZIndex = 2
+			end
+		end
 	end)
 end
 
@@ -1466,6 +1488,10 @@ end
 local function Unhide()
 	siaCall("window", "restore")
 	Debounce = true
+	-- Ensure correct colors before revealing to prevent white flash
+	Main.BackgroundColor3 = SelectedTheme.Background
+	Topbar.BackgroundColor3 = SelectedTheme.Topbar
+	Topbar.CornerRepair.BackgroundColor3 = SelectedTheme.Topbar
 	Main.Position = UDim2.new(0.5, 0, 0.5, 0)
 	Main.Visible = true
 	local mobileWidthUnhide = math.min(Rayfield.AbsoluteSize.X - 16, 480)
@@ -2060,11 +2086,14 @@ function RayfieldLibrary:CreateWindow(Settings)
 	Rayfield.Enabled = true
 
 	-- YinYang: Cinematic open sequence
-	-- Step 1: punch in from tiny
+	-- Step 1: punch in from tiny — ensure correct colors before reveal
+	Main.BackgroundColor3 = SelectedTheme.Background
 	Main.Size = UDim2.new(0, 80, 0, 80)
 	Main.Position = UDim2.new(0.5, 0, 0.5, 0)
 	Main.AnchorPoint = Vector2.new(0.5, 0.5)
 	Main.BackgroundTransparency = 1
+	Topbar.BackgroundColor3 = SelectedTheme.Topbar
+	Topbar.CornerRepair.BackgroundColor3 = SelectedTheme.Topbar
 	task.wait(0.15)
 	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 420, 0, 120), BackgroundTransparency = 0}):Play()
 	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {ImageTransparency = 0.5}):Play()
@@ -3864,8 +3893,9 @@ function RayfieldLibrary:CreateWindow(Settings)
 			ProfileGlow.Size = UDim2.new(0, 34, 0, 34)
 			ProfileGlow.Position = UDim2.new(0, 6, 0.5, 0)
 			ProfileGlow.AnchorPoint = Vector2.new(0, 0.5)
-			ProfileGlow.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			ProfileGlow.BackgroundTransparency = 0.85
+			-- Use grey not white to prevent white bleed on transparent surfaces
+			ProfileGlow.BackgroundColor3 = Color3.fromRGB(160, 160, 160)
+			ProfileGlow.BackgroundTransparency = 1
 			ProfileGlow.BorderSizePixel = 0
 			ProfileGlow.ZIndex = 4
 			ProfileGlow.Parent = Topbar
@@ -3905,18 +3935,18 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 			-- UIStroke on glow frame for the gradient border effect
 			local profileStroke = Instance.new("UIStroke")
-			profileStroke.Color = Color3.fromRGB(220, 220, 220)
-			profileStroke.Thickness = 1.5
-			profileStroke.Transparency = 0.4
+			profileStroke.Color = Color3.fromRGB(180, 180, 180)
+			profileStroke.Thickness = 1.2
+			profileStroke.Transparency = 0.6
 			profileStroke.Parent = ProfileGlow
 
 			-- Idle pulse animation
 			local pulseActive = true
 			task.spawn(function()
 				while pulseActive and ProfileGlow and ProfileGlow.Parent do
-					TweenService:Create(ProfileGlow, TweenInfo.new(1.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.75}):Play()
+					TweenService:Create(ProfileGlow, TweenInfo.new(1.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.82}):Play()
 					task.wait(1.6)
-					TweenService:Create(ProfileGlow, TweenInfo.new(1.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.9}):Play()
+					TweenService:Create(ProfileGlow, TweenInfo.new(1.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundTransparency = 1}):Play()
 					task.wait(1.6)
 				end
 			end)
@@ -3924,9 +3954,9 @@ function RayfieldLibrary:CreateWindow(Settings)
 			-- Click handler
 			ProfileBtn.MouseButton1Click:Connect(function()
 				-- Click punch animation
-				TweenService:Create(ProfileGlow, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, 28, 0, 28)}):Play()
+				TweenService:Create(ProfileGlow, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, 28, 0, 28), BackgroundTransparency = 0.65}):Play()
 				task.wait(0.1)
-				TweenService:Create(ProfileGlow, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 34, 0, 34)}):Play()
+				TweenService:Create(ProfileGlow, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 34, 0, 34), BackgroundTransparency = 1}):Play()
 
 				task.spawn(function()
 					for _, OtherTabButton in ipairs(TabList:GetChildren()) do
@@ -3945,13 +3975,13 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 			-- Hover animations
 			ProfileBtn.MouseEnter:Connect(function()
-				TweenService:Create(ProfileGlow, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 38, 0, 38), BackgroundTransparency = 0.6}):Play()
-				TweenService:Create(profileStroke, TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
+				TweenService:Create(ProfileGlow, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 38, 0, 38), BackgroundTransparency = 0.72}):Play()
+				TweenService:Create(profileStroke, TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {Transparency = 0.1}):Play()
 				TweenService:Create(ProfileBtn, TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
 			end)
 			ProfileBtn.MouseLeave:Connect(function()
-				TweenService:Create(ProfileGlow, TweenInfo.new(0.35, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 34, 0, 34), BackgroundTransparency = 0.85}):Play()
-				TweenService:Create(profileStroke, TweenInfo.new(0.35, Enum.EasingStyle.Exponential), {Transparency = 0.4}):Play()
+				TweenService:Create(ProfileGlow, TweenInfo.new(0.35, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 34, 0, 34), BackgroundTransparency = 1}):Play()
+				TweenService:Create(profileStroke, TweenInfo.new(0.35, Enum.EasingStyle.Exponential), {Transparency = 0.6}):Play()
 				TweenService:Create(ProfileBtn, TweenInfo.new(0.35, Enum.EasingStyle.Exponential), {ImageTransparency = 0.1}):Play()
 			end)
 
@@ -4165,10 +4195,12 @@ for _, TopbarButton in ipairs(Topbar:GetChildren()) do
 		GlowBack.Size = UDim2.new(0, 32, 0, 32)
 		GlowBack.Position = UDim2.new(0.5, 0, 0.5, 0)
 		GlowBack.AnchorPoint = Vector2.new(0.5, 0.5)
-		GlowBack.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		-- Use grey instead of white to prevent white bleed-through
+		GlowBack.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
 		GlowBack.BackgroundTransparency = 1
 		GlowBack.BorderSizePixel = 0
-		GlowBack.ZIndex = TopbarButton.ZIndex - 1
+		-- ZIndex behind the button icon, not behind the whole topbar
+		GlowBack.ZIndex = math.max(TopbarButton.ZIndex, 2)
 		GlowBack.Parent = TopbarButton
 		local glowCorner = Instance.new("UICorner")
 		glowCorner.CornerRadius = UDim.new(1, 0)
@@ -4176,7 +4208,7 @@ for _, TopbarButton in ipairs(Topbar:GetChildren()) do
 
 		TopbarButton.MouseEnter:Connect(function()
 			TweenService:Create(TopbarButton, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {ImageTransparency = 0, Size = UDim2.new(0, 22, 0, 22)}):Play()
-			TweenService:Create(GlowBack, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 0.82, Size = UDim2.new(0, 34, 0, 34)}):Play()
+			TweenService:Create(GlowBack, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 0.78, Size = UDim2.new(0, 34, 0, 34)}):Play()
 		end)
 
 		TopbarButton.MouseLeave:Connect(function()
@@ -4186,7 +4218,7 @@ for _, TopbarButton in ipairs(Topbar:GetChildren()) do
 
 		TopbarButton.MouseButton1Click:Connect(function()
 			-- Ripple punch on click
-			TweenService:Create(GlowBack, TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.5, Size = UDim2.new(0, 28, 0, 28)}):Play()
+			TweenService:Create(GlowBack, TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0.55, Size = UDim2.new(0, 28, 0, 28)}):Play()
 			task.wait(0.08)
 			TweenService:Create(GlowBack, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 1, Size = UDim2.new(0, 44, 0, 44)}):Play()
 			task.wait(0.4)
