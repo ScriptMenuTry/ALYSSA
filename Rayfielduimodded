@@ -513,37 +513,36 @@ local RayfieldLibrary = {
 			TabTextColor = Color3.fromRGB(200, 200, 200),
 			SelectedTabTextColor = Color3.fromRGB(10, 10, 10),
 
-			-- Elements: near-black slabs with thin white-gradient outlines
-			ElementBackground = Color3.fromRGB(14, 14, 14),
-			ElementBackgroundHover = Color3.fromRGB(22, 22, 22),
-			SecondaryElementBackground = Color3.fromRGB(8, 8, 8),
-			-- Stroke is bright white-ish — the thin luminous gradient outline
-			ElementStroke = Color3.fromRGB(210, 210, 210),
-			SecondaryElementStroke = Color3.fromRGB(140, 140, 140),
+			-- Elements: dark slabs, semi-transparent to show background image
+			ElementBackground = Color3.fromRGB(8, 8, 8),
+			ElementBackgroundHover = Color3.fromRGB(18, 18, 18),
+			SecondaryElementBackground = Color3.fromRGB(5, 5, 5),
+			-- Stroke: softer grey — not blinding white — prevents white bleed on transparent elements
+			ElementStroke = Color3.fromRGB(55, 55, 55),
+			SecondaryElementStroke = Color3.fromRGB(38, 38, 38),
 
-			-- Slider: white-on-black; track is void, fill and handle are Yang-white
-			SliderBackground = Color3.fromRGB(30, 30, 30),
-			SliderProgress = Color3.fromRGB(220, 220, 220),
-			SliderStroke = Color3.fromRGB(255, 255, 255),
+			-- Slider: dark track, light grey progress bar
+			SliderBackground = Color3.fromRGB(20, 20, 20),
+			SliderProgress = Color3.fromRGB(180, 180, 180),
+			SliderStroke = Color3.fromRGB(100, 100, 100),
 
-			-- Toggle: Yin (disabled) = dark void + dim stroke; Yang (enabled) = white blaze
-			ToggleBackground = Color3.fromRGB(12, 12, 12),
-			ToggleEnabled = Color3.fromRGB(230, 230, 230),
-			ToggleDisabled = Color3.fromRGB(40, 40, 40),
-			ToggleEnabledStroke = Color3.fromRGB(255, 255, 255),
-			ToggleDisabledStroke = Color3.fromRGB(70, 70, 70),
-			-- Outer glow ring: bright halo when on, dim ghost when off
-			ToggleEnabledOuterStroke = Color3.fromRGB(180, 180, 180),
-			ToggleDisabledOuterStroke = Color3.fromRGB(35, 35, 35),
+			-- Toggle: dark, with grey accents — avoids pure-white bleed
+			ToggleBackground = Color3.fromRGB(10, 10, 10),
+			ToggleEnabled = Color3.fromRGB(200, 200, 200),
+			ToggleDisabled = Color3.fromRGB(35, 35, 35),
+			ToggleEnabledStroke = Color3.fromRGB(160, 160, 160),
+			ToggleDisabledStroke = Color3.fromRGB(55, 55, 55),
+			ToggleEnabledOuterStroke = Color3.fromRGB(100, 100, 100),
+			ToggleDisabledOuterStroke = Color3.fromRGB(28, 28, 28),
 
-			-- Dropdowns: Yin/Yang contrast — selected is slightly lifted
-			DropdownSelected = Color3.fromRGB(20, 20, 20),
-			DropdownUnselected = Color3.fromRGB(10, 10, 10),
+			-- Dropdowns
+			DropdownSelected = Color3.fromRGB(18, 18, 18),
+			DropdownUnselected = Color3.fromRGB(8, 8, 8),
 
-			-- Input: pure void field, thin white gradient border, pale placeholder
-			InputBackground = Color3.fromRGB(10, 10, 10),
-			InputStroke = Color3.fromRGB(190, 190, 190),
-			PlaceholderColor = Color3.fromRGB(100, 100, 100)
+			-- Input: dark field, subtle grey border
+			InputBackground = Color3.fromRGB(8, 8, 8),
+			InputStroke = Color3.fromRGB(60, 60, 60),
+			PlaceholderColor = Color3.fromRGB(80, 80, 80)
 		},
 	}
 }
@@ -3808,18 +3807,18 @@ function RayfieldLibrary:CreateWindow(Settings)
 			userRole = "Owner"
 		end
 
-		local ProfileTab = Window:CreateTab("YY Profile", 0, true)
+		local ProfileTab = Window:CreateTab("Profile", 0, true)
 
-		if TabList["YY Profile"] then
-			TabList["YY Profile"].LayoutOrder = 999
-			TabList["YY Profile"].Visible = true
+		if TabList["Profile"] then
+			TabList["Profile"].LayoutOrder = 998
+			TabList["Profile"].Visible = false -- hidden from tab list, accessed via avatar button
 		end
-		if Elements["YY Profile"] then
-			Elements["YY Profile"].LayoutOrder = 999
+		if Elements["Profile"] then
+			Elements["Profile"].LayoutOrder = 998
 		end
 
 		-- Profile info
-		ProfileTab:CreateSection("User Profile")
+		ProfileTab:CreateSection(userRole .. " Profile")
 		local avatarUrl = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(userId) .. "&w=150&h=150"
 		ProfileTab:CreateLabel(displayName .. "  (@" .. username .. ")", avatarUrl)
 		ProfileTab:CreateLabel("Role: " .. userRole)
@@ -3885,108 +3884,98 @@ function RayfieldLibrary:CreateWindow(Settings)
 			end,
 		})
 
-		-- ---- Navbar Profile Button (animated, no emoji) ----
+		-- ---- Navbar Profile Button — anchored RIGHT side of topbar, before Hide ----
 		pcall(function()
-			-- Outer glow frame
-			local ProfileGlow = Instance.new("Frame")
-			ProfileGlow.Name = "ProfileGlow"
-			ProfileGlow.Size = UDim2.new(0, 34, 0, 34)
-			ProfileGlow.Position = UDim2.new(0, 6, 0.5, 0)
-			ProfileGlow.AnchorPoint = Vector2.new(0, 0.5)
-			-- Use grey not white to prevent white bleed on transparent surfaces
-			ProfileGlow.BackgroundColor3 = Color3.fromRGB(160, 160, 160)
-			ProfileGlow.BackgroundTransparency = 1
-			ProfileGlow.BorderSizePixel = 0
-			ProfileGlow.ZIndex = 4
-			ProfileGlow.Parent = Topbar
-			local profileGlowCorner = Instance.new("UICorner")
-			profileGlowCorner.CornerRadius = UDim.new(1, 0)
-			profileGlowCorner.Parent = ProfileGlow
-
-			-- Avatar image button
+			-- Avatar button sits on the RIGHT side of the topbar, mirroring Hide/ChangeSize
+			-- Use ImageButton directly (no floating frame outside topbar bounds)
 			local ProfileBtn = Instance.new("ImageButton")
 			ProfileBtn.Name = "ProfileBtn"
-			ProfileBtn.Size = UDim2.new(0, 28, 0, 28)
-			ProfileBtn.Position = UDim2.new(0.5, 0, 0.5, 0)
-			ProfileBtn.AnchorPoint = Vector2.new(0.5, 0.5)
+			ProfileBtn.Size = UDim2.new(0, 24, 0, 24)
+			-- Position to the left of the existing right-side buttons
+			-- Hide is at AnchorPoint (1,0.5) far right; we sit beside it
+			ProfileBtn.AnchorPoint = Vector2.new(1, 0.5)
+			ProfileBtn.Position = UDim2.new(1, -155, 0.5, 0)
 			ProfileBtn.BackgroundTransparency = 1
 			ProfileBtn.Image = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(userId) .. "&w=60&h=60"
-			ProfileBtn.ImageTransparency = 0.1
-			ProfileBtn.ZIndex = 5
-			ProfileBtn.Parent = ProfileGlow
+			ProfileBtn.ImageTransparency = 0.15
+			ProfileBtn.ScaleType = Enum.ScaleType.Fit
+			ProfileBtn.ZIndex = 6
+			ProfileBtn.Parent = Topbar
+
+			-- Circular clip
 			local profileCorner = Instance.new("UICorner")
 			profileCorner.CornerRadius = UDim.new(1, 0)
 			profileCorner.Parent = ProfileBtn
 
-			-- Role badge (small label below avatar, text only)
-			local RoleBadge = Instance.new("TextLabel")
-			RoleBadge.Name = "RoleBadge"
-			RoleBadge.Size = UDim2.new(0, 44, 0, 10)
-			RoleBadge.Position = UDim2.new(0.5, 0, 1, 2)
-			RoleBadge.AnchorPoint = Vector2.new(0.5, 0)
-			RoleBadge.BackgroundTransparency = 1
-			RoleBadge.Text = userRole == "Owner" and "OWNER" or "MEMBER"
-			RoleBadge.TextSize = 7
-			RoleBadge.Font = Enum.Font.GothamBold
-			RoleBadge.TextColor3 = userRole == "Owner" and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(180, 180, 180)
-			RoleBadge.TextTransparency = 0.1
-			RoleBadge.ZIndex = 5
-			RoleBadge.Parent = ProfileGlow
-
-			-- UIStroke on glow frame for the gradient border effect
+			-- Thin ring stroke (grey, not white)
 			local profileStroke = Instance.new("UIStroke")
-			profileStroke.Color = Color3.fromRGB(180, 180, 180)
+			profileStroke.Color = Color3.fromRGB(160, 160, 160)
 			profileStroke.Thickness = 1.2
-			profileStroke.Transparency = 0.6
-			profileStroke.Parent = ProfileGlow
+			profileStroke.Transparency = 0.5
+			profileStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+			profileStroke.Parent = ProfileBtn
 
-			-- Idle pulse animation
+			-- Role dot indicator — tiny circle inside topbar bounds, bottom-right of avatar
+			local RoleDot = Instance.new("Frame")
+			RoleDot.Name = "RoleDot"
+			RoleDot.Size = UDim2.new(0, 7, 0, 7)
+			RoleDot.Position = UDim2.new(1, -1, 1, -1)
+			RoleDot.AnchorPoint = Vector2.new(1, 1)
+			RoleDot.BackgroundColor3 = userRole == "Owner"
+				and Color3.fromRGB(255, 255, 255)
+				or  Color3.fromRGB(120, 120, 120)
+			RoleDot.BackgroundTransparency = 0
+			RoleDot.BorderSizePixel = 0
+			RoleDot.ZIndex = 7
+			RoleDot.Parent = ProfileBtn
+			local roleDotCorner = Instance.new("UICorner")
+			roleDotCorner.CornerRadius = UDim.new(1, 0)
+			roleDotCorner.Parent = RoleDot
+
+			-- Idle pulse on the ring stroke
 			local pulseActive = true
 			task.spawn(function()
-				while pulseActive and ProfileGlow and ProfileGlow.Parent do
-					TweenService:Create(ProfileGlow, TweenInfo.new(1.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundTransparency = 0.82}):Play()
-					task.wait(1.6)
-					TweenService:Create(ProfileGlow, TweenInfo.new(1.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundTransparency = 1}):Play()
-					task.wait(1.6)
+				while pulseActive and ProfileBtn and ProfileBtn.Parent do
+					TweenService:Create(profileStroke, TweenInfo.new(1.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Transparency = 0.1}):Play()
+					task.wait(1.8)
+					TweenService:Create(profileStroke, TweenInfo.new(1.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Transparency = 0.6}):Play()
+					task.wait(1.8)
 				end
 			end)
 
 			-- Click handler
 			ProfileBtn.MouseButton1Click:Connect(function()
-				-- Click punch animation
-				TweenService:Create(ProfileGlow, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, 28, 0, 28), BackgroundTransparency = 0.65}):Play()
-				task.wait(0.1)
-				TweenService:Create(ProfileGlow, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 34, 0, 34), BackgroundTransparency = 1}):Play()
+				-- Quick scale punch
+				TweenService:Create(ProfileBtn, TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, 18, 0, 18)}):Play()
+				task.wait(0.08)
+				TweenService:Create(ProfileBtn, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 24, 0, 24)}):Play()
 
 				task.spawn(function()
 					for _, OtherTabButton in ipairs(TabList:GetChildren()) do
 						if OtherTabButton.Name ~= "Template" and OtherTabButton.ClassName == "Frame" and OtherTabButton.Name ~= "Placeholder" then
-							TweenService:Create(OtherTabButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.TabBackground, BackgroundTransparency = 0.7}):Play()
-							TweenService:Create(OtherTabButton.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextColor3 = SelectedTheme.TabTextColor}):Play()
+							TweenService:Create(OtherTabButton, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.TabBackground, BackgroundTransparency = 0.7}):Play()
+							TweenService:Create(OtherTabButton.Title, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextColor3 = SelectedTheme.TabTextColor}):Play()
 						end
 					end
 					siaCurrentTab = nil
-					if Elements["YY Profile"] then
-						Elements.UIPageLayout:JumpTo(Elements["YY Profile"])
+					if Elements["Profile"] then
+						Elements.UIPageLayout:JumpTo(Elements["Profile"])
 					end
-					RayfieldLibrary:Notify({Title = "Profile", Content = displayName .. " [ " .. userRole .. " ]", Duration = 3, Image = 4483362748})
+					RayfieldLibrary:Notify({Title = "Profile", Content = displayName .. "  [ " .. userRole .. " ]", Duration = 3, Image = 4483362748})
 				end)
 			end)
 
-			-- Hover animations
+			-- Hover
 			ProfileBtn.MouseEnter:Connect(function()
-				TweenService:Create(ProfileGlow, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 38, 0, 38), BackgroundTransparency = 0.72}):Play()
-				TweenService:Create(profileStroke, TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {Transparency = 0.1}):Play()
-				TweenService:Create(ProfileBtn, TweenInfo.new(0.25, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
+				TweenService:Create(ProfileBtn, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 28, 0, 28), ImageTransparency = 0}):Play()
+				TweenService:Create(profileStroke, TweenInfo.new(0.2, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
 			end)
 			ProfileBtn.MouseLeave:Connect(function()
-				TweenService:Create(ProfileGlow, TweenInfo.new(0.35, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 34, 0, 34), BackgroundTransparency = 1}):Play()
-				TweenService:Create(profileStroke, TweenInfo.new(0.35, Enum.EasingStyle.Exponential), {Transparency = 0.6}):Play()
-				TweenService:Create(ProfileBtn, TweenInfo.new(0.35, Enum.EasingStyle.Exponential), {ImageTransparency = 0.1}):Play()
+				TweenService:Create(ProfileBtn, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 24, 0, 24), ImageTransparency = 0.15}):Play()
+				TweenService:Create(profileStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
 			end)
 
-			-- Destroy cleanup
-			ProfileGlow.Destroying:Connect(function() pulseActive = false end)
+			ProfileBtn.Destroying:Connect(function() pulseActive = false end)
 		end)
 	end)
 
