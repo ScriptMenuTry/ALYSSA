@@ -29672,8 +29672,8 @@ BackgroundTransparency=.9,
 })
 
 local _avatarCircle
--- YinYang: no avatar icon in open button
-local _isYinYang=(ab.Theme and ab.Theme.Name=="YinYang")
+-- YinYang / ZenHub: no avatar icon in open button
+local _isYinYang=(ab.Theme and (ab.Theme.Name=="YinYang" or ab.Theme.Name=="ZenHub"))
 if not _isYinYang then
 task.spawn(function()
 local _lp=(cloneref or clonereference or function(v)return v end)(game:GetService"Players").LocalPlayer
@@ -38577,6 +38577,18 @@ ThemeTag={
 TextColor3="WindowTopbarTitle",
 },
 })
+
+-- ZenHub: shimmer sweep on window title gradient
+if av.WindUI and av.WindUI.Theme and av.WindUI.Theme.Name=="ZenHub" then
+task.spawn(function()
+task.wait(0.15)
+local _grad=z:FindFirstChildOfClass"UIGradient"
+if not _grad then return end
+local _ts=(cloneref or clonereference or function(v)return v end)(game:GetService"TweenService")
+-- offset ping-pong: purple-peak sweeps left↔right, alive shimmer
+_ts:Create(_grad,TweenInfo.new(2,Enum.EasingStyle.Sine,Enum.EasingDirection.InOut,-1,true),{Offset=Vector2.new(0.35,0)}):Play()
+end)
+end
 
 aw.UIElements.Main=ao("Frame",{
 Size=UDim2.new(aw.Size.X.Scale,aw.Size.X.Offset,0,0),
