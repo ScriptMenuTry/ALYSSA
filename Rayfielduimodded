@@ -486,58 +486,53 @@ end
 local RayfieldLibrary = {
 	Flags = {},
 	Theme = {
-		-- YinYang — Pure black canvas, paper-white & void-black duality
-		--    Thin luminous gradient outlines pulse between white and near-black.
-		--    Every "Yang" accent is ice-white; every "Yin" counter is void-grey.
+		-- YinYang — Void black + anime BG. 30% element transparency.
 		YinYang = {
-			-- Crisp paper-white text on absolute void
-			TextColor = Color3.fromRGB(245, 245, 245),
+			TextColor = Color3.fromRGB(240, 240, 240),
 
+			-- Pure black window so BG image shows through elements
 			Background = Color3.fromRGB(0, 0, 0),
-			Topbar = Color3.fromRGB(0, 0, 0),
+			Topbar = Color3.fromRGB(5, 5, 5),
 			Shadow = Color3.fromRGB(0, 0, 0),
 
-			-- Notifications: near-black
-			NotificationBackground = Color3.fromRGB(8, 8, 8),
-			NotificationActionsBackground = Color3.fromRGB(22, 22, 22),
+			-- Notifications
+			NotificationBackground = Color3.fromRGB(10, 10, 10),
+			NotificationActionsBackground = Color3.fromRGB(20, 20, 20),
 
-			-- Tabs: dark slabs, selected = lifted dark grey (not blinding white)
-			TabBackground = Color3.fromRGB(12, 12, 12),
-			TabStroke = Color3.fromRGB(45, 45, 45),
-			TabBackgroundSelected = Color3.fromRGB(32, 32, 32),
-			TabTextColor = Color3.fromRGB(130, 130, 130),
-			SelectedTabTextColor = Color3.fromRGB(230, 230, 230),
+			-- Tabs: sharp pill-style, selected = white-on-dark pop
+			TabBackground = Color3.fromRGB(15, 15, 15),
+			TabStroke = Color3.fromRGB(50, 50, 50),
+			TabBackgroundSelected = Color3.fromRGB(230, 230, 230),
+			TabTextColor = Color3.fromRGB(120, 120, 120),
+			SelectedTabTextColor = Color3.fromRGB(0, 0, 0),
 
-			-- Elements: dark slabs, semi-transparent to show background image
-			ElementBackground = Color3.fromRGB(8, 8, 8),
-			ElementBackgroundHover = Color3.fromRGB(18, 18, 18),
-			SecondaryElementBackground = Color3.fromRGB(5, 5, 5),
-			-- Stroke: softer grey — not blinding white — prevents white bleed on transparent elements
-			ElementStroke = Color3.fromRGB(55, 55, 55),
-			SecondaryElementStroke = Color3.fromRGB(38, 38, 38),
+			-- Elements at 30% transparency — dark enough to read, BG visible
+			ElementBackground = Color3.fromRGB(12, 12, 12),
+			ElementBackgroundHover = Color3.fromRGB(25, 25, 25),
+			SecondaryElementBackground = Color3.fromRGB(8, 8, 8),
+			ElementStroke = Color3.fromRGB(48, 48, 48),
+			SecondaryElementStroke = Color3.fromRGB(32, 32, 32),
 
-			-- Slider: dark track, light grey progress bar
-			SliderBackground = Color3.fromRGB(20, 20, 20),
-			SliderProgress = Color3.fromRGB(180, 180, 180),
-			SliderStroke = Color3.fromRGB(100, 100, 100),
+			-- Slider
+			SliderBackground = Color3.fromRGB(18, 18, 18),
+			SliderProgress = Color3.fromRGB(200, 200, 200),
+			SliderStroke = Color3.fromRGB(90, 90, 90),
 
-			-- Toggle: dark, with grey accents — avoids pure-white bleed
+			-- Toggle
 			ToggleBackground = Color3.fromRGB(10, 10, 10),
-			ToggleEnabled = Color3.fromRGB(200, 200, 200),
-			ToggleDisabled = Color3.fromRGB(35, 35, 35),
-			ToggleEnabledStroke = Color3.fromRGB(160, 160, 160),
-			ToggleDisabledStroke = Color3.fromRGB(55, 55, 55),
-			ToggleEnabledOuterStroke = Color3.fromRGB(100, 100, 100),
-			ToggleDisabledOuterStroke = Color3.fromRGB(28, 28, 28),
+			ToggleEnabled = Color3.fromRGB(210, 210, 210),
+			ToggleDisabled = Color3.fromRGB(30, 30, 30),
+			ToggleEnabledStroke = Color3.fromRGB(150, 150, 150),
+			ToggleDisabledStroke = Color3.fromRGB(50, 50, 50),
+			ToggleEnabledOuterStroke = Color3.fromRGB(90, 90, 90),
+			ToggleDisabledOuterStroke = Color3.fromRGB(25, 25, 25),
 
-			-- Dropdowns
-			DropdownSelected = Color3.fromRGB(18, 18, 18),
-			DropdownUnselected = Color3.fromRGB(8, 8, 8),
+			DropdownSelected = Color3.fromRGB(20, 20, 20),
+			DropdownUnselected = Color3.fromRGB(10, 10, 10),
 
-			-- Input: dark field, subtle grey border
-			InputBackground = Color3.fromRGB(8, 8, 8),
-			InputStroke = Color3.fromRGB(60, 60, 60),
-			PlaceholderColor = Color3.fromRGB(80, 80, 80)
+			InputBackground = Color3.fromRGB(10, 10, 10),
+			InputStroke = Color3.fromRGB(55, 55, 55),
+			PlaceholderColor = Color3.fromRGB(75, 75, 75)
 		},
 	}
 }
@@ -934,7 +929,7 @@ local function applyWindowBackground(frame)
 		bg.Position = UDim2.new(0, 0, 0, 0)
 		bg.AnchorPoint = Vector2.new(0, 0)
 		bg.Image = YINYANG_BG_ID
-		bg.ImageTransparency = 0.3   -- clearer image
+		bg.ImageTransparency = 0.15  -- very clear BG image
 		bg.BackgroundTransparency = 1
 		bg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 		bg.ScaleType = Enum.ScaleType.Crop
@@ -949,7 +944,7 @@ end
 
 -- YinYang: initialise an element frame with correct dark colour before its reveal tween
 -- Use semi-transparent (0.55) so the BG image shows through each element
-local ELEMENT_BG_TRANSPARENCY = 0.55
+local ELEMENT_BG_TRANSPARENCY = 0.30
 local function initElement(frame)
 	if not frame then return end
 	pcall(function()
@@ -1336,7 +1331,7 @@ local function closeSearch()
 				TweenService:Create(tabbtn.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
 				TweenService:Create(tabbtn.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
 			else
-				TweenService:Create(tabbtn, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.7}):Play()
+				TweenService:Create(tabbtn, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.30}):Play()
 				TweenService:Create(tabbtn.Image, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0.2}):Play()
 				TweenService:Create(tabbtn.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.2}):Play()
 				TweenService:Create(tabbtn.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
@@ -1390,7 +1385,7 @@ local function setTabButtonsVisible(show)
 					TweenService:Create(tabbtn.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
 					TweenService:Create(tabbtn.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
 				else
-					TweenService:Create(tabbtn, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.7}):Play()
+					TweenService:Create(tabbtn, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.30}):Play()
 					TweenService:Create(tabbtn.Image, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0.2}):Play()
 					TweenService:Create(tabbtn.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.2}):Play()
 					TweenService:Create(tabbtn.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
@@ -2175,10 +2170,25 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 
 
+		-- YinYang: set colour before reveal to prevent white flash
+		TabButton.BackgroundColor3 = SelectedTheme.TabBackground
+
 		TabButton.BackgroundTransparency = 1
 		TabButton.Title.TextTransparency = 1
 		TabButton.Image.ImageTransparency = 1
 		TabButton.UIStroke.Transparency = 1
+
+		-- Pill-shaped rounded corners on each tab button
+		pcall(function()
+			local existingCorner = TabButton:FindFirstChildOfClass("UICorner")
+			if existingCorner then
+				existingCorner.CornerRadius = UDim.new(0, 8)
+			else
+				local tc = Instance.new("UICorner")
+				tc.CornerRadius = UDim.new(0, 8)
+				tc.Parent = TabButton
+			end
+		end)
 
 		TabButton.Visible = not Ext or false
 
@@ -2226,25 +2236,26 @@ function RayfieldLibrary:CreateWindow(Settings)
 		end
 
 
-		-- Animate
+		-- YinYang: Animate tab reveal with 30% transparency
 		task.wait(0.1)
 		if FirstTab or Ext then
 			TabButton.BackgroundColor3 = SelectedTheme.TabBackground
 			TabButton.Image.ImageColor3 = SelectedTheme.TabTextColor
 			TabButton.Title.TextColor3 = SelectedTheme.TabTextColor
-			TweenService:Create(TabButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.7}):Play()
-			TweenService:Create(TabButton.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0.2}):Play()
-			TweenService:Create(TabButton.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.2}):Play()
-			TweenService:Create(TabButton.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
+			TweenService:Create(TabButton, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 0.30}):Play()
+			TweenService:Create(TabButton.Title, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextTransparency = 0.1}):Play()
+			TweenService:Create(TabButton.Image, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {ImageTransparency = 0.1}):Play()
+			TweenService:Create(TabButton.UIStroke, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Transparency = 0.3}):Play()
 		elseif not Ext then
 			FirstTab = Name
 			siaCurrentTab = siaTab
 			TabButton.BackgroundColor3 = SelectedTheme.TabBackgroundSelected
 			TabButton.Image.ImageColor3 = SelectedTheme.SelectedTabTextColor
 			TabButton.Title.TextColor3 = SelectedTheme.SelectedTabTextColor
-			TweenService:Create(TabButton.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
-			TweenService:Create(TabButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
-			TweenService:Create(TabButton.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
+			TweenService:Create(TabButton.Image, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+			TweenService:Create(TabButton, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
+			TweenService:Create(TabButton.Title, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
+			TweenService:Create(TabButton.UIStroke, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
 		end
 
 
@@ -2267,7 +2278,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 					TweenService:Create(OtherTabButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.TabBackground}):Play()
 					TweenService:Create(OtherTabButton.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextColor3 = SelectedTheme.TabTextColor}):Play()
 					TweenService:Create(OtherTabButton.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageColor3 = SelectedTheme.TabTextColor}):Play()
-					TweenService:Create(OtherTabButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.7}):Play()
+					TweenService:Create(OtherTabButton, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.30}):Play()
 					TweenService:Create(OtherTabButton.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0.2}):Play()
 					TweenService:Create(OtherTabButton.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.2}):Play()
 					TweenService:Create(OtherTabButton.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
@@ -3920,22 +3931,22 @@ function RayfieldLibrary:CreateWindow(Settings)
 			end,
 		})
 
-		-- ---- Navbar Profile Button — sits LEFT of Search button (no gap) ----
+		-- ---- Navbar Profile Button — right-anchored left of Search ----
 		pcall(function()
 			local isOwner = userRole == "Owner"
 
-			-- Outer container: holds avatar + role badge, sits flush left of Search
-			-- Search is at UDim2.new(1, -114, 0.5, 0) with other buttons filling rightward
-			-- We use AnchorPoint(1,0.5) and offset left of where Search sits
+			-- Right-side topbar layout (left to right from right edge):
+			-- Hide ~18px, ChangeSize ~50px, Settings ~82px, Search ~114px
+			-- ProfileContainer goes at ~148px from right edge
 			local ProfileContainer = Instance.new("Frame")
 			ProfileContainer.Name = "ProfileContainer"
-			ProfileContainer.Size = UDim2.new(0, 34, 0, 34)
-			ProfileContainer.AnchorPoint = Vector2.new(0.5, 0.5)
-			-- Centre: left half of topbar, right after the title area
-			ProfileContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
+			ProfileContainer.Size = UDim2.new(0, 30, 0, 30)
+			ProfileContainer.AnchorPoint = Vector2.new(1, 0.5)
+			ProfileContainer.Position = UDim2.new(1, -148, 0.5, 0)
 			ProfileContainer.BackgroundTransparency = 1
 			ProfileContainer.BorderSizePixel = 0
 			ProfileContainer.ZIndex = 6
+			ProfileContainer.ClipsDescendants = false
 			ProfileContainer.Parent = Topbar
 
 			-- Outer ring (role colour)
@@ -3959,11 +3970,11 @@ function RayfieldLibrary:CreateWindow(Settings)
 			ringStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 			ringStroke.Parent = RoleRing
 
-			-- Avatar image (inset 3px so ring shows around it)
+			-- Avatar image (inset 2px so ring shows)
 			local ProfileBtn = Instance.new("ImageButton")
 			ProfileBtn.Name = "ProfileBtn"
-			ProfileBtn.Size = UDim2.new(1, -6, 1, -6)
-			ProfileBtn.Position = UDim2.new(0, 3, 0, 3)
+			ProfileBtn.Size = UDim2.new(1, -4, 1, -4)
+			ProfileBtn.Position = UDim2.new(0, 2, 0, 2)
 			ProfileBtn.BackgroundTransparency = 1
 			ProfileBtn.Image = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(userId) .. "&w=60&h=60"
 			ProfileBtn.ImageTransparency = 0
@@ -3974,38 +3985,36 @@ function RayfieldLibrary:CreateWindow(Settings)
 			avatarCorner.CornerRadius = UDim.new(1, 0)
 			avatarCorner.Parent = ProfileBtn
 
-			-- Role badge circle — bottom-right of avatar, clearly labelled
+			-- Role badge — bottom-right corner of avatar, extends slightly outside container
+			-- Shows "OWNER" or "MEMBER" label below the avatar
 			local RoleBadge = Instance.new("Frame")
 			RoleBadge.Name = "RoleBadge"
-			RoleBadge.Size = UDim2.new(0, 14, 0, 14)
-			RoleBadge.Position = UDim2.new(1, -2, 1, -2)
-			RoleBadge.AnchorPoint = Vector2.new(1, 1)
+			RoleBadge.Size = UDim2.new(0, 36, 0, 12)
+			RoleBadge.Position = UDim2.new(0.5, 0, 1, 2)
+			RoleBadge.AnchorPoint = Vector2.new(0.5, 0)
 			RoleBadge.BorderSizePixel = 0
 			RoleBadge.ZIndex = 8
 			RoleBadge.Parent = ProfileContainer
-			-- Owner = white filled, Member = dark grey filled
-			RoleBadge.BackgroundColor3 = isOwner and Color3.fromRGB(240, 240, 240) or Color3.fromRGB(60, 60, 60)
+			RoleBadge.BackgroundColor3 = isOwner and Color3.fromRGB(220, 220, 220) or Color3.fromRGB(40, 40, 40)
 			RoleBadge.BackgroundTransparency = 0
 			local badgeCorner = Instance.new("UICorner")
-			badgeCorner.CornerRadius = UDim.new(1, 0)
+			badgeCorner.CornerRadius = UDim.new(0, 3)
 			badgeCorner.Parent = RoleBadge
-			-- Dark outline so badge is visible against both light and dark backgrounds
 			local badgeStroke = Instance.new("UIStroke")
-			badgeStroke.Color = Color3.fromRGB(0, 0, 0)
-			badgeStroke.Thickness = 1.5
-			badgeStroke.Transparency = 0
+			badgeStroke.Color = isOwner and Color3.fromRGB(255,255,255) or Color3.fromRGB(80,80,80)
+			badgeStroke.Thickness = 1
+			badgeStroke.Transparency = 0.3
 			badgeStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 			badgeStroke.Parent = RoleBadge
-			-- Initial letter: O = Owner, M = Member
 			local BadgeLabel = Instance.new("TextLabel")
 			BadgeLabel.Name = "BadgeLabel"
 			BadgeLabel.Size = UDim2.new(1, 0, 1, 0)
 			BadgeLabel.Position = UDim2.new(0, 0, 0, 0)
 			BadgeLabel.BackgroundTransparency = 1
-			BadgeLabel.Text = isOwner and "O" or "M"
-			BadgeLabel.TextSize = 7
+			BadgeLabel.Text = isOwner and "OWNER" or "MEMBER"
+			BadgeLabel.TextSize = 6
 			BadgeLabel.Font = Enum.Font.GothamBold
-			BadgeLabel.TextColor3 = isOwner and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(200, 200, 200)
+			BadgeLabel.TextColor3 = isOwner and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(180, 180, 180)
 			BadgeLabel.TextXAlignment = Enum.TextXAlignment.Center
 			BadgeLabel.TextYAlignment = Enum.TextYAlignment.Center
 			BadgeLabel.ZIndex = 9
@@ -4026,15 +4035,14 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 			-- Click handler
 			ProfileBtn.MouseButton1Click:Connect(function()
-				-- Scale punch on container
-				TweenService:Create(ProfileContainer, TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, 26, 0, 26)}):Play()
+				TweenService:Create(ProfileContainer, TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, 22, 0, 22)}):Play()
 				task.wait(0.08)
-				TweenService:Create(ProfileContainer, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 34, 0, 34)}):Play()
+				TweenService:Create(ProfileContainer, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 30, 0, 30)}):Play()
 
 				task.spawn(function()
 					for _, OtherTabButton in ipairs(TabList:GetChildren()) do
 						if OtherTabButton.Name ~= "Template" and OtherTabButton.ClassName == "Frame" and OtherTabButton.Name ~= "Placeholder" then
-							TweenService:Create(OtherTabButton, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.TabBackground, BackgroundTransparency = 0.7}):Play()
+							TweenService:Create(OtherTabButton, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.TabBackground, BackgroundTransparency = 0.30}):Play()
 							TweenService:Create(OtherTabButton.Title, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {TextColor3 = SelectedTheme.TabTextColor}):Play()
 						end
 					end
@@ -4048,11 +4056,11 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 			-- Hover
 			ProfileBtn.MouseEnter:Connect(function()
-				TweenService:Create(ProfileContainer, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 38, 0, 38)}):Play()
+				TweenService:Create(ProfileContainer, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 34, 0, 34)}):Play()
 				TweenService:Create(ringStroke, TweenInfo.new(0.2, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
 			end)
 			ProfileBtn.MouseLeave:Connect(function()
-				TweenService:Create(ProfileContainer, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 34, 0, 34)}):Play()
+				TweenService:Create(ProfileContainer, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 30, 0, 30)}):Play()
 				TweenService:Create(ringStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = isOwner and 0.1 or 0.4}):Play()
 			end)
 
@@ -4213,7 +4221,7 @@ if Topbar:FindFirstChild('Settings') then
 					TweenService:Create(OtherTabButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundColor3 = SelectedTheme.TabBackground}):Play()
 					TweenService:Create(OtherTabButton.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextColor3 = SelectedTheme.TabTextColor}):Play()
 					TweenService:Create(OtherTabButton.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageColor3 = SelectedTheme.TabTextColor}):Play()
-					TweenService:Create(OtherTabButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.7}):Play()
+					TweenService:Create(OtherTabButton, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.30}):Play()
 					TweenService:Create(OtherTabButton.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0.2}):Play()
 					TweenService:Create(OtherTabButton.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.2}):Play()
 					TweenService:Create(OtherTabButton.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
