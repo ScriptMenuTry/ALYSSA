@@ -28586,6 +28586,230 @@ Metadata={
 Description="⚔ Sovereign — enchanted volcanic throne. Blood, void, and forbidden fire.",
 },
 },
+ZenHub={
+Name="ZenHub",
+
+-- 🔮 Silkscreen pixel font — same war-font as YinYang/Sovereign
+Font="rbxassetid://12187371840",
+
+-- Accent: dark-purple crown → white-purple meridian → pink-red flame
+Accent=aa:Gradient({
+["0"]={Color=Color3.fromHex"#1A0030",Transparency=0},
+["30"]={Color=Color3.fromHex"#5500AA",Transparency=0},
+["60"]={Color=Color3.fromHex"#CC88FF",Transparency=0},
+["80"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF0066",Transparency=0},
+},{Rotation=90}),
+
+-- Dialog: obsidian-purple, deep and cold
+Dialog=aa:Gradient({
+["0"]={Color=Color3.fromHex"#0A0015",Transparency=0},
+["50"]={Color=Color3.fromHex"#140025",Transparency=0},
+["100"]={Color=Color3.fromHex"#1A0030",Transparency=0},
+},{Rotation=90}),
+
+-- Outline: vivid neon-purple → white → electric pink — the glow ring
+Outline=aa:Gradient({
+["0"]={Color=Color3.fromHex"#AA00FF",Transparency=0},
+["25"]={Color=Color3.fromHex"#EE44FF",Transparency=0},
+["50"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["75"]={Color=Color3.fromHex"#FF44AA",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF0055",Transparency=0},
+},{Rotation=90}),
+
+-- Text: white → soft lavender → pink-cream
+Text=aa:Gradient({
+["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["60"]={Color=Color3.fromHex"#EED5FF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FFBBEE",Transparency=0},
+},{Rotation=45}),
+
+-- Placeholder: muted amethyst
+Placeholder=Color3.fromHex"#884499",
+
+-- Background: near-void dark purple — the deep end of the gradient
+Background=aa:Gradient({
+["0"]={Color=Color3.fromHex"#060010",Transparency=0},
+["35"]={Color=Color3.fromHex"#0D0020",Transparency=0},
+["70"]={Color=Color3.fromHex"#150028",Transparency=0},
+["100"]={Color=Color3.fromHex"#1A0032",Transparency=0},
+},{Rotation=90}),
+
+-- Button: purple void → neon violet → pink-red ignition
+Button=aa:Gradient({
+["0"]={Color=Color3.fromHex"#4400AA",Transparency=0},
+["35"]={Color=Color3.fromHex"#8800DD",Transparency=0},
+["65"]={Color=Color3.fromHex"#CC44FF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF0066",Transparency=0},
+},{Rotation=90}),
+
+-- Icon: glowing purple-to-pink spectrum
+Icon=aa:Gradient({
+["0"]={Color=Color3.fromHex"#CC44FF",Transparency=0},
+["50"]={Color=Color3.fromHex"#EBB0FF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF44AA",Transparency=0},
+},{Rotation=90}),
+
+-- Toggle: electric violet pulse
+Toggle=aa:Gradient({
+["0"]={Color=Color3.fromHex"#9900FF",Transparency=0},
+["50"]={Color=Color3.fromHex"#CC22FF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF0066",Transparency=0},
+},{Rotation=45}),
+ToggleBar=aa:Gradient({
+["0"]={Color=Color3.fromHex"#1A0030",Transparency=0},
+["100"]={Color=Color3.fromHex"#2A0040",Transparency=0},
+},{Rotation=90}),
+
+-- Slider: deep amethyst trail → pink-red tip
+Slider=aa:Gradient({
+["0"]={Color=Color3.fromHex"#6600BB",Transparency=0},
+["50"]={Color=Color3.fromHex"#AA33FF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF0066",Transparency=0},
+},{Rotation=90}),
+
+-- Checkbox: neon violet seal
+Checkbox=aa:Gradient({
+["0"]={Color=Color3.fromHex"#9900FF",Transparency=0},
+["50"]={Color=Color3.fromHex"#CC44FF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF0066",Transparency=0},
+},{Rotation=45}),
+CheckboxBorder=aa:Gradient({
+["0"]={Color=Color3.fromHex"#9900FF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF0066",Transparency=0},
+},{Rotation=90}),
+CheckboxBorderTransparency=0.35,
+
+-- Panel: deep midnight-purple glass
+PanelBackground=aa:Gradient({
+["0"]={Color=Color3.fromHex"#1A0030",Transparency=0},
+["100"]={Color=Color3.fromHex"#280040",Transparency=0},
+},{Rotation=90}),
+PanelBackgroundTransparency=0.75,
+
+-- Label: dark void glass
+LabelBackground=Color3.fromHex"#0D0020",
+LabelBackgroundTransparency=0.5,
+
+-- Slider knob: vivid electric pink glow
+SliderIcon=Color3.fromHex"#EE44FF",
+
+-- Primary: mid-gradient — neon violet
+Primary=aa:Gradient({
+["0"]={Color=Color3.fromHex"#9900FF",Transparency=0},
+["50"]={Color=Color3.fromHex"#CC44FF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF0066",Transparency=0},
+},{Rotation=90}),
+
+-- Element cards: dark aubergine satin
+ElementBackground=aa:Gradient({
+["0"]={Color=Color3.fromHex"#140025",Transparency=0},
+["50"]={Color=Color3.fromHex"#1E0035",Transparency=0},
+["100"]={Color=Color3.fromHex"#280040",Transparency=0},
+},{Rotation=90}),
+ElementBackgroundTransparency=0,
+
+-- Window topbar title: purple-crown → white-peak → pink-flame
+WindowTopbarTitle=aa:Gradient({
+["0"]={Color=Color3.fromHex"#CC44FF",Transparency=0},
+["40"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["70"]={Color=Color3.fromHex"#FFDDF5",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF0066",Transparency=0},
+},{Rotation=45}),
+
+-- Shadow: deep void-purple
+WindowShadow=Color3.fromHex"#1A0030",
+
+-- Scrollbar: glowing gradient rail
+ScrollBar=aa:Gradient({
+["0"]={Color=Color3.fromHex"#9900FF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF0066",Transparency=0},
+},{Rotation=90}),
+ScrollBarBackground=Color3.fromHex"#0D0018",
+
+-- Tab INACTIVE text: soft purple-pink — readable on dark tab bg
+TabText=aa:Gradient({
+["0"]={Color=Color3.fromHex"#CC44FF",Transparency=0},
+["50"]={Color=Color3.fromHex"#EBB0FF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF44AA",Transparency=0},
+},{Rotation=90}),
+TabTextTransparency=0.35,
+TabTextTransparencyActive=0,
+
+-- Tab ACTIVE text: white → soft pink-cream (on vivid active bg)
+TabTextActive=aa:Gradient({
+["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["50"]={Color=Color3.fromHex"#FFDDF5",Transparency=0},
+["100"]={Color=Color3.fromHex"#FFBBEE",Transparency=0},
+},{Rotation=45}),
+
+-- Tab INACTIVE icon: purple-to-pink glow (muted)
+TabIcon=aa:Gradient({
+["0"]={Color=Color3.fromHex"#CC44FF",Transparency=0},
+["50"]={Color=Color3.fromHex"#EBB0FF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF44AA",Transparency=0},
+},{Rotation=90}),
+TabIconTransparency=0.3,
+TabIconTransparencyActive=0,
+
+-- Tab ACTIVE icon: bright white → pink-lavender (on vivid bg)
+TabIconActive=aa:Gradient({
+["0"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["50"]={Color=Color3.fromHex"#EBB0FF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF44AA",Transparency=0},
+},{Rotation=90}),
+
+-- Tab section title: full gradient sweep
+TabTitle=aa:Gradient({
+["0"]={Color=Color3.fromHex"#9900FF",Transparency=0},
+["35"]={Color=Color3.fromHex"#EBB0FF",Transparency=0},
+["65"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF0066",Transparency=0},
+},{Rotation=90}),
+
+-- Tab backgrounds: void dark → vivid gradient active
+TabBackground=Color3.fromHex"#0D0020",
+TabBackgroundHover=Color3.fromHex"#1A003A",
+TabBackgroundHoverTransparency=0,
+TabBackgroundActive=aa:Gradient({
+["0"]={Color=Color3.fromHex"#3300AA",Transparency=0},
+["35"]={Color=Color3.fromHex"#9933FF",Transparency=0},
+["65"]={Color=Color3.fromHex"#EBB0FF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF0066",Transparency=0},
+},{Rotation=90}),
+TabBackgroundActiveTransparency=0,
+
+-- Tab border glow: neon violet → white → electric pink
+TabBorder=aa:Gradient({
+["0"]={Color=Color3.fromHex"#9900FF",Transparency=0},
+["50"]={Color=Color3.fromHex"#FFFFFF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF0066",Transparency=0},
+},{Rotation=90}),
+TabBorderTransparency=1,
+TabBorderTransparencyActive=0.2,
+
+-- Dropdown / open menu: dark aubergine with violet-glow skin
+DropdownBackground=aa:Gradient({
+["0"]={Color=Color3.fromHex"#0D0018",Transparency=0},
+["50"]={Color=Color3.fromHex"#1A0030",Transparency=0},
+["100"]={Color=Color3.fromHex"#200020",Transparency=0},
+},{Rotation=90}),
+DropdownTabBackground=aa:Gradient({
+["0"]={Color=Color3.fromHex"#1A0030",Transparency=0},
+["100"]={Color=Color3.fromHex"#2A0040",Transparency=0},
+},{Rotation=90}),
+
+-- Progress bar: full glow gradient
+ProgressBar=aa:Gradient({
+["0"]={Color=Color3.fromHex"#9900FF",Transparency=0},
+["100"]={Color=Color3.fromHex"#FF0066",Transparency=0},
+},{Rotation=90}),
+
+Metadata={
+Title="🔮 ZenHub",
+Description="🔮 ZenHub — dark-purple void, white-purple meridian, pink-red ignition. Gradient. Glowing. Absolute.",
+},
+},
 }
 end end function a.C()
 
