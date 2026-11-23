@@ -1453,6 +1453,8 @@ local function Hide(notify: boolean?)
 			if navGlow then
 				TweenService:Create(navGlow, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
 			end
+		elseif TopbarButton.Name == "ProfileContainer" then
+			TweenService:Create(TopbarButton, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {GroupTransparency = 1}):Play()
 		end
 	end
 
@@ -1540,6 +1542,8 @@ local function Unhide()
 			else
 				TweenService:Create(TopbarButton, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {ImageTransparency = 0.15}):Play()
 			end
+		elseif TopbarButton.Name == "ProfileContainer" then
+			TweenService:Create(TopbarButton, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {GroupTransparency = 0}):Play()
 		end
 	end
 
@@ -3796,13 +3800,13 @@ function RayfieldLibrary:CreateWindow(Settings)
 	task.wait(0.07)
 	TweenService:Create(Topbar.Hide, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {ImageTransparency = 0.15}):Play()
 
-	-- Profile button cascade (injected by profile system below)
+	-- Profile container cascade (injected by profile system)
 	pcall(function()
-		local profBtn = Topbar:FindFirstChild("ProfileBtn")
-		if profBtn then
-			profBtn.ImageTransparency = 1
+		local profContainer = Topbar:FindFirstChild("ProfileContainer")
+		if profContainer then
+			profContainer.GroupTransparency = 1
 			task.wait(0.07)
-			TweenService:Create(profBtn, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {ImageTransparency = 0.1}):Play()
+			TweenService:Create(profContainer, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {GroupTransparency = 0}):Play()
 		end
 	end)
 
@@ -3916,71 +3920,116 @@ function RayfieldLibrary:CreateWindow(Settings)
 			end,
 		})
 
-		-- ---- Navbar Profile Button — anchored RIGHT side of topbar, before Hide ----
+		-- ---- Navbar Profile Button — sits LEFT of Search button (no gap) ----
 		pcall(function()
-			-- Avatar button sits on the RIGHT side of the topbar, mirroring Hide/ChangeSize
-			-- Use ImageButton directly (no floating frame outside topbar bounds)
+			local isOwner = userRole == "Owner"
+
+			-- Outer container: holds avatar + role badge, sits flush left of Search
+			-- Search is at UDim2.new(1, -114, 0.5, 0) with other buttons filling rightward
+			-- We use AnchorPoint(1,0.5) and offset left of where Search sits
+			local ProfileContainer = Instance.new("Frame")
+			ProfileContainer.Name = "ProfileContainer"
+			ProfileContainer.Size = UDim2.new(0, 34, 0, 34)
+			ProfileContainer.AnchorPoint = Vector2.new(0.5, 0.5)
+			-- Centre: left half of topbar, right after the title area
+			ProfileContainer.Position = UDim2.new(0.5, 0, 0.5, 0)
+			ProfileContainer.BackgroundTransparency = 1
+			ProfileContainer.BorderSizePixel = 0
+			ProfileContainer.ZIndex = 6
+			ProfileContainer.Parent = Topbar
+
+			-- Outer ring (role colour)
+			local RoleRing = Instance.new("Frame")
+			RoleRing.Name = "RoleRing"
+			RoleRing.Size = UDim2.new(1, 0, 1, 0)
+			RoleRing.Position = UDim2.new(0, 0, 0, 0)
+			RoleRing.BackgroundTransparency = 1
+			RoleRing.BorderSizePixel = 0
+			RoleRing.ZIndex = 6
+			RoleRing.Parent = ProfileContainer
+			local ringCorner = Instance.new("UICorner")
+			ringCorner.CornerRadius = UDim.new(1, 0)
+			ringCorner.Parent = RoleRing
+			local ringStroke = Instance.new("UIStroke")
+			ringStroke.Name = "RingStroke"
+			-- Owner = bright white ring, Member = dim grey ring
+			ringStroke.Color = isOwner and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(100, 100, 100)
+			ringStroke.Thickness = isOwner and 2 or 1.2
+			ringStroke.Transparency = isOwner and 0.1 or 0.4
+			ringStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+			ringStroke.Parent = RoleRing
+
+			-- Avatar image (inset 3px so ring shows around it)
 			local ProfileBtn = Instance.new("ImageButton")
 			ProfileBtn.Name = "ProfileBtn"
-			ProfileBtn.Size = UDim2.new(0, 24, 0, 24)
-			-- Position to the left of the existing right-side buttons
-			-- Hide is at AnchorPoint (1,0.5) far right; we sit beside it
-			ProfileBtn.AnchorPoint = Vector2.new(1, 0.5)
-			ProfileBtn.Position = UDim2.new(1, -155, 0.5, 0)
+			ProfileBtn.Size = UDim2.new(1, -6, 1, -6)
+			ProfileBtn.Position = UDim2.new(0, 3, 0, 3)
 			ProfileBtn.BackgroundTransparency = 1
 			ProfileBtn.Image = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(userId) .. "&w=60&h=60"
-			ProfileBtn.ImageTransparency = 0.15
+			ProfileBtn.ImageTransparency = 0
 			ProfileBtn.ScaleType = Enum.ScaleType.Fit
-			ProfileBtn.ZIndex = 6
-			ProfileBtn.Parent = Topbar
+			ProfileBtn.ZIndex = 7
+			ProfileBtn.Parent = ProfileContainer
+			local avatarCorner = Instance.new("UICorner")
+			avatarCorner.CornerRadius = UDim.new(1, 0)
+			avatarCorner.Parent = ProfileBtn
 
-			-- Circular clip
-			local profileCorner = Instance.new("UICorner")
-			profileCorner.CornerRadius = UDim.new(1, 0)
-			profileCorner.Parent = ProfileBtn
+			-- Role badge circle — bottom-right of avatar, clearly labelled
+			local RoleBadge = Instance.new("Frame")
+			RoleBadge.Name = "RoleBadge"
+			RoleBadge.Size = UDim2.new(0, 14, 0, 14)
+			RoleBadge.Position = UDim2.new(1, -2, 1, -2)
+			RoleBadge.AnchorPoint = Vector2.new(1, 1)
+			RoleBadge.BorderSizePixel = 0
+			RoleBadge.ZIndex = 8
+			RoleBadge.Parent = ProfileContainer
+			-- Owner = white filled, Member = dark grey filled
+			RoleBadge.BackgroundColor3 = isOwner and Color3.fromRGB(240, 240, 240) or Color3.fromRGB(60, 60, 60)
+			RoleBadge.BackgroundTransparency = 0
+			local badgeCorner = Instance.new("UICorner")
+			badgeCorner.CornerRadius = UDim.new(1, 0)
+			badgeCorner.Parent = RoleBadge
+			-- Dark outline so badge is visible against both light and dark backgrounds
+			local badgeStroke = Instance.new("UIStroke")
+			badgeStroke.Color = Color3.fromRGB(0, 0, 0)
+			badgeStroke.Thickness = 1.5
+			badgeStroke.Transparency = 0
+			badgeStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+			badgeStroke.Parent = RoleBadge
+			-- Initial letter: O = Owner, M = Member
+			local BadgeLabel = Instance.new("TextLabel")
+			BadgeLabel.Name = "BadgeLabel"
+			BadgeLabel.Size = UDim2.new(1, 0, 1, 0)
+			BadgeLabel.Position = UDim2.new(0, 0, 0, 0)
+			BadgeLabel.BackgroundTransparency = 1
+			BadgeLabel.Text = isOwner and "O" or "M"
+			BadgeLabel.TextSize = 7
+			BadgeLabel.Font = Enum.Font.GothamBold
+			BadgeLabel.TextColor3 = isOwner and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(200, 200, 200)
+			BadgeLabel.TextXAlignment = Enum.TextXAlignment.Center
+			BadgeLabel.TextYAlignment = Enum.TextYAlignment.Center
+			BadgeLabel.ZIndex = 9
+			BadgeLabel.Parent = RoleBadge
 
-			-- Thin ring stroke (grey, not white)
-			local profileStroke = Instance.new("UIStroke")
-			profileStroke.Color = Color3.fromRGB(160, 160, 160)
-			profileStroke.Thickness = 1.2
-			profileStroke.Transparency = 0.5
-			profileStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-			profileStroke.Parent = ProfileBtn
-
-			-- Role dot indicator — tiny circle inside topbar bounds, bottom-right of avatar
-			local RoleDot = Instance.new("Frame")
-			RoleDot.Name = "RoleDot"
-			RoleDot.Size = UDim2.new(0, 7, 0, 7)
-			RoleDot.Position = UDim2.new(1, -1, 1, -1)
-			RoleDot.AnchorPoint = Vector2.new(1, 1)
-			RoleDot.BackgroundColor3 = userRole == "Owner"
-				and Color3.fromRGB(255, 255, 255)
-				or  Color3.fromRGB(120, 120, 120)
-			RoleDot.BackgroundTransparency = 0
-			RoleDot.BorderSizePixel = 0
-			RoleDot.ZIndex = 7
-			RoleDot.Parent = ProfileBtn
-			local roleDotCorner = Instance.new("UICorner")
-			roleDotCorner.CornerRadius = UDim.new(1, 0)
-			roleDotCorner.Parent = RoleDot
-
-			-- Idle pulse on the ring stroke
+			-- Idle pulse animation on the ring (Owner only — prominent glow)
 			local pulseActive = true
-			task.spawn(function()
-				while pulseActive and ProfileBtn and ProfileBtn.Parent do
-					TweenService:Create(profileStroke, TweenInfo.new(1.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Transparency = 0.1}):Play()
-					task.wait(1.8)
-					TweenService:Create(profileStroke, TweenInfo.new(1.8, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Transparency = 0.6}):Play()
-					task.wait(1.8)
-				end
-			end)
+			if isOwner then
+				task.spawn(function()
+					while pulseActive and ProfileContainer and ProfileContainer.Parent do
+						TweenService:Create(ringStroke, TweenInfo.new(1.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Transparency = 0}):Play()
+						task.wait(1.6)
+						TweenService:Create(ringStroke, TweenInfo.new(1.6, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Transparency = 0.5}):Play()
+						task.wait(1.6)
+					end
+				end)
+			end
 
 			-- Click handler
 			ProfileBtn.MouseButton1Click:Connect(function()
-				-- Quick scale punch
-				TweenService:Create(ProfileBtn, TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, 18, 0, 18)}):Play()
+				-- Scale punch on container
+				TweenService:Create(ProfileContainer, TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, 26, 0, 26)}):Play()
 				task.wait(0.08)
-				TweenService:Create(ProfileBtn, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 24, 0, 24)}):Play()
+				TweenService:Create(ProfileContainer, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 34, 0, 34)}):Play()
 
 				task.spawn(function()
 					for _, OtherTabButton in ipairs(TabList:GetChildren()) do
@@ -3999,15 +4048,15 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 			-- Hover
 			ProfileBtn.MouseEnter:Connect(function()
-				TweenService:Create(ProfileBtn, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 28, 0, 28), ImageTransparency = 0}):Play()
-				TweenService:Create(profileStroke, TweenInfo.new(0.2, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
+				TweenService:Create(ProfileContainer, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 38, 0, 38)}):Play()
+				TweenService:Create(ringStroke, TweenInfo.new(0.2, Enum.EasingStyle.Exponential), {Transparency = 0}):Play()
 			end)
 			ProfileBtn.MouseLeave:Connect(function()
-				TweenService:Create(ProfileBtn, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 24, 0, 24), ImageTransparency = 0.15}):Play()
-				TweenService:Create(profileStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
+				TweenService:Create(ProfileContainer, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 34, 0, 34)}):Play()
+				TweenService:Create(ringStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = isOwner and 0.1 or 0.4}):Play()
 			end)
 
-			ProfileBtn.Destroying:Connect(function() pulseActive = false end)
+			ProfileContainer.Destroying:Connect(function() pulseActive = false end)
 		end)
 	end)
 
